@@ -1,0 +1,152 @@
+/* Sidebar */
+.nav-link-head {
+    display: block;
+    padding: .5rem .2rem !important;
+}
+.nav-sidebar .nav-treeview {
+  margin-left: 10px;
+}
+.nav-sidebar .nav-treeview i {
+  font-size: 12px !important;
+}
+
+/* Form */
+.input_form label{
+  /* font-weight: 400 !important; */
+  font-size: 14px !important;
+  margin-bottom: 1px !important;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance:textfield;
+}
+
+/* Select - select2 */
+
+.select_sm .select2-container--default .select2-selection--single {
+    background-color: #fff;
+    border: 1px solid #ced4da !important;
+    border-radius: 4px;
+    height: 31px!important;
+}
+.select_sm .select2-container .select2-selection--single .select2-selection__rendered {
+    display: block;
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.select_sm .select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: #495057 !important;
+    line-height: 22px !important;
+    font-size: .875rem;
+}
+
+/* Multi-Select */
+.select_sm .select2-container--default.select2-container--focus .select2-selection--multiple {
+    border: 1px solid #ced4da !important;
+    outline: 0;
+}
+
+.select_sm .select2-container--default .select2-selection--multiple .select2-selection__rendered .select2-search.select2-search--inline .select2-search__field {
+    border: 0;
+    margin-top: 3px !important;
+}
+
+.select_sm .select2-container--default .select2-selection--multiple {
+    background-color: white;
+    border: 1px solid #ced4da !important;
+    border-radius: 4px;
+    cursor: text;
+    font-size: .875rem !important;
+}
+
+.select_sm .select2-container--default .select2-selection--multiple .select2-selection__choice {
+    background-color: #007bff !important;
+    border-color: #006fe6 !important;
+    border-radius: 4px;
+    cursor: default;
+    float: left;
+    margin-right: 5px;
+    margin-top: 3px !important;
+    padding: 0 5px;
+}
+
+.div_left{
+  border: 1px solid rgba(34,36,38,.15) !important;
+  border-right: none !important;
+  border-radius: 5px;
+}
+.div_right{
+  border: 1px solid rgba(34,36,38,.15) !important;
+  border-radius: 5px;
+}
+
+/* Table width */
+.wt_50{
+  width: 50px !important;
+}
+.wt_75{
+  width: 75px !important;
+}
+.wt_100{
+  width: 100px !important;
+}
+.wt_125{
+  width: 125px !important;
+}
+.wt_150{
+  width: 150px !important;
+}
+.wt_200{
+  width: 200px !important;
+}
+.wt_250{
+  width: 250px !important;
+}
+
+/* Table */
+.tbl_list{
+  background: #fff !important;
+}
+
+#example1 td{
+  padding:7px 10px !important;
+}
+
+.pricing .card {
+    text-align: center;
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgb(223, 34, 38);
+    border-image: initial;
+    transition: top 2s ease 0s;
+}
+.pricing .card:hover {
+    box-shadow: rgb(223, 34, 38) 0px 8px 6px -6px;
+    top: -2px;
+}
+.pricing .card .card-title .memname {
+    padding: 8px;
+    border-radius: 8px;
+}
+.pricing .card .card-text {
+    margin-bottom: 10px;
+}
+
+
+
+
+.note-editing-area{
+  height: 180px;
+}
