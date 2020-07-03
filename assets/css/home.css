@@ -91,7 +91,7 @@ h1 , h4, h2, h3, h5, p {
 .owl-prev i, .owl-next i {transform : scale(1,6); color: #ccc;}
 
 .bl-1{
-  border-left: 2px solid #000;
+  border-left: 2px solid #6c757d;
   margin-left: 5px;
   margin-right: 5px;
 }
@@ -234,7 +234,8 @@ h1 , h4, h2, h3, h5, p {
   }
 
   .bg-nav{
-    background-color: #f30414;
+    background-color: #fff !important;
+
   }
 
 

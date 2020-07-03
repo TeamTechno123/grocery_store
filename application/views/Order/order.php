@@ -60,17 +60,47 @@
                           <input type="text" class="form-control form-control-sm" name="order_cust_lname" id="order_cust_lname" value="<?php if(isset($order_info)){ echo $order_info['order_cust_lname']; } ?>" required>
                         </div>
                         <div class="form-group col-md-12">
-                          <label>Address.</label>
+                          <label>Address</label>
                           <input type="text" class="form-control form-control-sm" name="order_cust_addr" id="order_cust_addr" value="<?php if(isset($order_info)){ echo $order_info['order_cust_addr']; } ?>" required>
                         </div>
-                        <div class="form-group col-md-6">
+                        <div class="form-group col-md-6 select_sm">
+                          <label>Country*</label>
+                          <select class="form-control select2 form-control-sm" name="country_id" id="country_id" data-placeholder="Select Country" required>
+                            <option value="">Select Country</option>
+                            <?php if(isset($country_list)){ foreach ($country_list as $list) { ?>
+                            <option value="<?php echo $list->country_id; ?>" <?php if(isset($order_info) && $order_info['country_id'] == $list->country_id){ echo 'selected'; } ?>><?php echo $list->country_name; ?></option>
+                            <?php } } ?>
+                          </select>
+                        </div>
+                        <div class="form-group col-md-6 select_sm">
+                          <label>State*</label>
+                          <select class="form-control select2 form-control-sm" name="state_id" id="state_id" data-placeholder="Select State" required>
+                            <option value="">Select State</option>
+                            <?php if(isset($state_list)){ foreach ($state_list as $list) { ?>
+                            <option value="<?php echo $list->state_id; ?>" <?php if(isset($order_info) && $order_info['state_id'] == $list->state_id){ echo 'selected'; } ?>><?php echo $list->state_name; ?></option>
+                            <?php } } ?>
+                          </select>
+                        </div>
+                        <div class="form-group col-md-6 select_sm">
+                          <label>City*</label>
+                          <select class="form-control select2 form-control-sm" name="city_id" id="city_id" data-placeholder="Select City" required>
+                            <option value="">Select City</option>
+                            <?php if(isset($city_list)){ foreach ($city_list as $list) { ?>
+                            <option value="<?php echo $list->city_id; ?>" <?php if(isset($order_info) && $order_info['city_id'] == $list->city_id){ echo 'selected'; } ?>><?php echo $list->city_name; ?></option>
+                            <?php } } ?>
+                          </select>
+                        </div>
+
+
+                        <!-- <div class="form-group col-md-6">
                           <label>City</label>
                           <input type="text" class="form-control form-control-sm" name="order_cust_city" id="order_cust_city" value="<?php if(isset($order_info)){ echo $order_info['order_cust_city']; } ?>" required>
-                        </div>
+                        </div> -->
                         <div class="form-group col-md-6">
                           <label>Pin Code</label>
                           <input type="number" class="form-control form-control-sm" name="order_cust_pin" id="order_cust_pin" value="<?php if(isset($order_info)){ echo $order_info['order_cust_pin']; } ?>" required>
                         </div>
+
                         <div class="form-group col-md-6">
                           <label>Mobile</label>
                           <input type="text" class="form-control form-control-sm" name="order_cust_mob" id="order_cust_mob" value="<?php if(isset($order_info)){ echo $order_info['order_cust_mob']; } ?>" required>
@@ -216,7 +246,7 @@
                     <?php } else{ ?>
                       <button id="btn_save" type="submit" class="btn btn-success px-4">Save</button>
                     <?php } ?>
-                    <a href="<?php echo base_url() ?>User/manufacturer_list" class="btn btn-default ml-4">Cancel</a>
+                    <a href="" class="btn btn-default ml-4">Cancel</a>
                   </div>
                 </div>
               </form>

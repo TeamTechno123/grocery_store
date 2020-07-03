@@ -80,9 +80,10 @@
                           <select class="form-control form-control-sm product_id" name="input[<?php echo $i; ?>][product_id]" data-placeholder="Select Customer" required>
                             <option value="">Select Product</option>
                             <?php foreach ($product_list as $product_list1) { ?>
-                              <option value="<?php echo $product_list1->product_id; ?>" tax_rate="<?php echo $product_list1->tax_rate; ?>" <?php if($product_list1->product_id == $list->product_id){ echo 'selected'; } ?>><?php echo $product_list1->product_name; ?></option>
+                              <option value="<?php echo $product_list1->product_id; ?>" pro_attri_id="<?php echo $product_list1->pro_attri_id; ?>" tax_rate="<?php echo $product_list1->tax_rate; ?>" <?php if($product_list1->product_id == $list->product_id){ echo 'selected'; } ?>><?php echo $product_list1->product_name.' - '.$product_list1->pro_attri_weight.''.$product_list1->unit_name; ?></option>
                             <?php } ?>
                           </select>
+                          <input type="hidden" class="form-control form-control-sm pro_attri_id" name="input[<?php echo $i; ?>][pro_attri_id]"  value="<?php echo $list->pro_attri_id; ?>" required>
                         </td>
                         <td class="wt_150">
                           <input type="number" min="0.01" step="0.01" class="form-control form-control-sm purchase_pro_weight" name="input[<?php echo $i; ?>][purchase_pro_weight]"  value="<?php echo $list->purchase_pro_weight; ?>" required>
@@ -119,9 +120,10 @@
                           <select class="form-control form-control-sm product_id" name="input[0][product_id]" data-placeholder="Select Customer" required>
                             <option value="">Select Product</option>
                             <?php foreach ($product_list as $product_list1) { ?>
-                              <option value="<?php echo $product_list1->product_id; ?>" tax_rate="<?php echo $product_list1->tax_rate; ?>"><?php echo $product_list1->product_name; ?></option>
+                              <option value="<?php echo $product_list1->product_id; ?>" pro_attri_id="<?php echo $product_list1->pro_attri_id; ?>" tax_rate="<?php echo $product_list1->tax_rate; ?>"><?php echo $product_list1->product_name.' - '.$product_list1->pro_attri_weight.''.$product_list1->unit_name; ?></option>
                             <?php } ?>
                           </select>
+                          <input type="hidden" class="form-control form-control-sm pro_attri_id" name="input[0][pro_attri_id]" required>
                         </td>
                         <td class="wt_150">
                           <input type="number" min="0.01" step="0.01" class="form-control form-control-sm purchase_pro_weight" name="input[0][purchase_pro_weight]" required>
@@ -184,7 +186,7 @@
                     <?php } else{ ?>
                       <button id="btn_save" type="submit" class="btn btn-success px-4">Save</button>
                     <?php } ?>
-                    <a href="<?php echo base_url() ?>User/manufacturer_list" class="btn btn-default ml-4">Cancel</a>
+                    <a href="" class="btn btn-default ml-4">Cancel</a>
                   </div>
                 </div>
               </form>
@@ -213,9 +215,10 @@
         '<select class="form-control form-control-sm product_id" name="input['+i+'][product_id]" data-placeholder="Select Customer" required>'+
           '<option value="">Select Product</option>'+
           '<?php foreach ($product_list as $product_list1) { ?>'+
-            '<option value="<?php echo $product_list1->product_id; ?>" tax_rate="<?php echo $product_list1->tax_rate; ?>"><?php echo $product_list1->product_name; ?></option>'+
+            '<option value="<?php echo $product_list1->product_id; ?>" pro_attri_id="<?php echo $product_list1->pro_attri_id; ?>" tax_rate="<?php echo $product_list1->tax_rate; ?>"><?php echo $product_list1->product_name.' - '.$product_list1->pro_attri_weight.''.$product_list1->unit_name; ?></option>'+
           '<?php } ?>'+
         '</select>'+
+        '<input type="hidden" class="form-control form-control-sm pro_attri_id" name="input['+i+'][pro_attri_id]" required>'+
       '</td>'+
       '<td class="wt_150">'+
         '<input type="number" min="0.01" step="0.01" class="form-control form-control-sm purchase_pro_weight" name="input['+i+'][purchase_pro_weight]" required>'+
@@ -310,14 +313,12 @@
     var purchase_pro_qty =   $(this).closest('tr').find('.purchase_pro_qty').val();
     var purchase_pro_weight = $(this).closest('tr').find('.purchase_pro_weight').val();
     var gst_per = $(this).closest('tr').find('.product_id').find("option:selected").attr('tax_rate');
-
     // var purchase_gst =   $('#purchase_gst').val();
 
     if(purchase_pro_price == ''){ purchase_pro_price = 0; }
     if(purchase_pro_qty == ''){ purchase_pro_qty = 0; }
     if(purchase_pro_weight == ''){ purchase_pro_weight = 0; }
     // if(purchase_gst == ''){ purchase_gst = 0; }
-
 
     var purchase_pro_price = parseFloat(purchase_pro_price);
     var purchase_pro_qty = parseFloat(purchase_pro_qty);
@@ -359,6 +360,13 @@
     $('#purchase_total_amount').val(purchase_total_amount.toFixed(2));
 
     // alert(purchase_pro_gst_amt);
+  });
+
+  $(document).on('change','.product_id', function () {
+    var pro_attri_id = $(this).find("option:selected").attr('pro_attri_id');
+    $(this).closest('tr').find('.pro_attri_id').val(pro_attri_id);
+    // alert(pro_attri_id);
+    // var gst_per = $(this).closest('tr').find('.product_id').find("option:selected").attr('tax_rate');
   });
 
   // $('#purchase_shipping_amt').on('change', function () {

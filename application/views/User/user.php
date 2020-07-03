@@ -63,7 +63,7 @@
                   <?php } else{ ?>
                     <button id="btn_save" type="submit" class="btn btn-success px-4">Add</button>
                   <?php } ?>
-                  <a href="<?php echo base_url() ?>User/dashboard" class="btn btn-default ml-4">Cancel</a>
+                  <a href="" class="btn btn-default ml-4">Cancel</a>
                 </div>
               </form>
             </div>

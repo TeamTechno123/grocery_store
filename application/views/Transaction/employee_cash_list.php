@@ -46,7 +46,7 @@
                   <tr>
                     <td><?php echo $i; ?></td>
                     <td><?php echo $list->employee_cash_date; ?></td>
-                    <td><?php echo $user_info[0]['user_name']; ?></td>
+                    <td><?php if($user_info){ echo $user_info[0]['user_name']; }  ?></td>
                     <td><?php echo $list->employee_cash_amt; ?></td>
                     <td>
                       <a href="<?php echo base_url(); ?>Transaction/edit_employee_cash/<?php echo $list->employee_cash_id; ?>"> <i class="fa fa-edit"></i> </a>

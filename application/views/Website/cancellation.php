@@ -17,7 +17,7 @@
         <ol>
           <li class="text-div">Request to cancel the order will be accepted only if the product has not been dispatched by us. If accepted, the customer is entitled to get a refund of the entire amount if paid at the time of order.</li>
           <li class="text-div">If we receive a cancellation request from the customer after the product/s has been dispatched by us, cancellation request will not be accepted.</li>
-          <li class="text-div">Needs On Door reserves the right to cancel or refuse to accept any order placed due to various reasons like no availability of stock, pricing errors, factual errors or problems identified with the personal/financial details provided by the customer.</li>
+          <li class="text-div">Kiranabhara.com reserves the right to cancel or refuse to accept any order placed due to various reasons like no availability of stock, pricing errors, factual errors or problems identified with the personal/financial details provided by the customer.</li>
         </ol>
         <h4 class="text-left">Money Back in case of cancellation or return:</h4>
         <p class="text-div">In general case of exchange/replacement/return due to above-mentioned quality issues and a written proof from the customer following refund policies are applicable:</p>

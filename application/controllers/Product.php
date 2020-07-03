@@ -81,6 +81,10 @@ class Product extends CI_Controller{
              $this->session->set_flashdata('upload_status',$this->upload->display_errors());
            }
          }
+
+         $notification = 'New Product Category Added'.$_POST['category_name'].'';
+         $this->send_notification($notification);
+
         $this->session->set_flashdata('save_success','success');
         header('location:'.base_url().'Product/category_list');
       }
@@ -206,17 +210,15 @@ class Product extends CI_Controller{
         $save_data = $_POST;
         unset($save_data['files']);
         unset($save_data['input']);
+        unset($save_data['product_area']);
+        if(isset($_POST['product_area'])){
+          $product_area = $_POST['product_area'];
+          $product_area = implode(',',$product_area);
+          $save_data['product_area'] = $product_area;
+        }
         $save_data['company_id'] = $eco_company_id;
         $save_data['product_date'] = date('d-m-Y h:i:s A');
         $save_data['product_addedby'] = $eco_user_id;
-
-        // $product_mrp = $save_data['product_mrp'];
-        // $product_price = $save_data['product_price'];
-        // $discount_amount = $product_mrp - $product_price;
-        // $product_discount = ($discount_amount/$product_mrp) * 100;
-        // $product_discount = round($product_discount);
-        // $save_data['product_discount'] = $product_discount;
-        // $save_data['product_discount_amt'] = $discount_amount;
 
         $product_id = $this->User_Model->save_data('product', $save_data);
 
@@ -256,14 +258,19 @@ class Product extends CI_Controller{
             $this->session->set_flashdata('upload_status',$this->upload->display_errors());
           }
         }
+
+        $notification = 'New Product Added'.$_POST['product_name'].'';
+        $this->send_notification($notification);
+
         header('location:'.base_url().'Product/product_list');
       }
 
       $data['manufacturer_list'] = $this->User_Model->get_list_by_id_com($eco_company_id,'manufacturer_status',1,'','','manufacturer_name','ASC','manufacturer');
       $data['main_category_list'] = $this->User_Model->get_list_by_id_com($eco_company_id,'category_status',1,'is_main',1,'category_name','ASC','category');
       $data['category_list'] = $this->User_Model->get_list_by_id_com($eco_company_id,'category_status',1,'is_main',0,'category_name','ASC','category');
-      $data['tax_list'] = $this->User_Model->get_list_by_id_com($eco_company_id,'tax_status',1,'','','tax_title','ASC','tax');
+      $data['tax_list'] = $this->User_Model->get_list_by_id_com($eco_company_id,'tax_status',1,'','','tax_rate','ASC','tax');
       $data['unit_list'] = $this->User_Model->get_list_by_id_com($eco_company_id,'unit_status',1,'','','unit_name','ASC','unit');
+      $data['area_list'] = $this->User_Model->get_list_by_id_com('','tahsil_status',1,'','','tahsil_name','ASC','tahsil');
       $this->load->view('Include/head', $data);
       $this->load->view('Include/navbar', $data);
       $this->load->view('Product/product', $data);
@@ -283,16 +290,20 @@ class Product extends CI_Controller{
         unset($update_data['files']);
         unset($update_data['old_img']);
         unset($update_data['input']);
+
+        unset($update_data['files']);
+        unset($update_data['input']);
+        unset($update_data['product_area']);
+        if(isset($_POST['product_area'])){
+          $product_area = $_POST['product_area'];
+          $product_area = implode(',',$product_area);
+          $update_data['product_area'] = $product_area;
+        } else{
+          $update_data['product_area'] = '';
+        }
+
         $update_data['product_date'] = date('d-m-Y h:i:s A');
         $update_data['product_addedby'] = $eco_user_id;
-
-        // $product_mrp = $update_data['product_mrp'];
-        // $product_price = $update_data['product_price'];
-        // $discount_amount = $product_mrp - $product_price;
-        // $product_discount = ($discount_amount/$product_mrp) * 100;
-        // $product_discount = round($product_discount);
-        // $update_data['product_discount'] = $product_discount;
-        // $update_data['product_discount_amt'] = $discount_amount;
 
         $this->User_Model->update_info('product_id', $product_id, 'product', $update_data);
 
@@ -361,8 +372,9 @@ class Product extends CI_Controller{
       $data['manufacturer_list'] = $this->User_Model->get_list_by_id_com($eco_company_id,'manufacturer_status',1,'','','manufacturer_name','ASC','manufacturer');
       $data['main_category_list'] = $this->User_Model->get_list_by_id_com($eco_company_id,'category_status',1,'is_main',1,'category_name','ASC','category');
       $data['category_list'] = $this->User_Model->get_list_by_id_com($eco_company_id,'category_status',1,'is_main',0,'category_name','ASC','category');
-      $data['tax_list'] = $this->User_Model->get_list_by_id_com($eco_company_id,'tax_status',1,'','','tax_title','ASC','tax');
+      $data['tax_list'] = $this->User_Model->get_list_by_id_com($eco_company_id,'tax_status',1,'','','tax_rate','ASC','tax');
       $data['unit_list'] = $this->User_Model->get_list_by_id_com($eco_company_id,'unit_status',1,'','','unit_name','ASC','unit');
+      $data['area_list'] = $this->User_Model->get_list_by_id_com('','tahsil_status',1,'','','tahsil_name','ASC','tahsil');
 
       $data['product_attribute_list'] = $this->User_Model->get_list_by_id('product_id',$product_id,'','','pro_attri_id','ASC','product_attribute');
       // print_r($data['product_attribute_list']);
@@ -635,154 +647,41 @@ class Product extends CI_Controller{
     $this->load->view('Include/footer', $data);
   }
 
-/***********************     Sale Information      ******************************/
 
-  public function sale_list(){
-    $this->load->view('Include/head');
-    $this->load->view('Include/navbar');
-    $this->load->view('User/sale_list');
-    $this->load->view('Include/footer');
-  }
-  public function sale(){
-    $this->load->view('Include/head');
-    $this->load->view('Include/navbar');
-    $this->load->view('User/sale');
-    $this->load->view('Include/footer');
-  }
+/***************************************************************************************************************/
 
-
-/***********************     purchase Information      ******************************/
-
-  public function purchase_list(){
-    $this->load->view('Include/head');
-    $this->load->view('Include/navbar');
-    $this->load->view('User/purchase_list');
-    $this->load->view('Include/footer');
-  }
-  public function purchase(){
-    $this->load->view('Include/head');
-    $this->load->view('Include/navbar');
-    $this->load->view('User/purchase');
-    $this->load->view('Include/footer');
-  }
-
-
-
-  /***********************     Product Attr Information - Hidden     ******************************/
-
-    // Attribute List
-    public function product_attri_list(){
-      $eco_user_id = $this->session->userdata('eco_user_id');
-      $eco_company_id = $this->session->userdata('eco_company_id');
-      $eco_role_id = $this->session->userdata('eco_role_id');
-      if($eco_user_id == '' && $eco_company_id == ''){ header('location:'.base_url().'User'); }
-      $data['attribute_list'] = $this->User_Model->get_list($eco_company_id,'attribute_name','ASC','attribute');
-      $this->load->view('Include/head', $data);
-      $this->load->view('Include/navbar', $data);
-      $this->load->view('Product/product_attri_list', $data);
-      $this->load->view('Include/footer', $data);
-    }
-
-    // Add Attribute...
-    public function product_attri(){
-      $eco_user_id = $this->session->userdata('eco_user_id');
-      $eco_company_id = $this->session->userdata('eco_company_id');
-      $eco_role_id = $this->session->userdata('eco_role_id');
-      if($eco_user_id == '' && $eco_company_id == ''){ header('location:'.base_url().'User'); }
-
-      $this->form_validation->set_rules('attribute_name', 'Name', 'trim|required');
-      if ($this->form_validation->run() != FALSE) {
-        $save_data = array(
-          'company_id' => $eco_company_id,
-          'attribute_name' => $this->input->post('attribute_name'),
-          'attribute_addedby' => $eco_user_id,
-          'attribute_date' => date('d-m-Y h:m:s A'),
-        );
-        $attribute_id = $this->User_Model->save_data('attribute', $save_data);
-
-        foreach($_POST['input'] as $multi_data){
-          $multi_data['attribute_id'] = $attribute_id;
-          $this->db->insert('attribute_val', $multi_data);
-        }
-
-        $this->session->set_flashdata('save_success','success');
-        header('location:'.base_url().'Product/product_attri_list');
+  public function send_notification($notification){
+    $customer_list = $this->User_Model->get_list_by_id2('device_id','device_id !=','','customer');
+    if($customer_list){
+      $device_id = array();
+      foreach ($customer_list as $customer_list1) {
+        array_push($device_id, $customer_list1->device_id);
       }
-      $this->load->view('Include/head');
-      $this->load->view('Include/navbar');
-      $this->load->view('Product/product_attri');
-      $this->load->view('Include/footer');
+      // Push Notification...
+      $content = array(
+         "en" => $notification;
+      );
+      $fields = array(
+        'app_id' => "a9f8e2a8-1fdf-4488-9a96-8d43c562c56a",
+        'include_player_ids' => $device_id,
+        'data' => array("msg" => "Comment Added Successfully"),
+        'contents' => $content
+      );
+      $fields = json_encode($fields);
+      $ch = curl_init();
+      curl_setopt($ch, CURLOPT_URL, "https://onesignal.com/api/v1/notifications");
+      curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json; charset=utf-8',
+                             'Authorization: Basic ZjJkZWJkM2YtMDQ0Yy00NTAyLWE5Y2QtMTBlZjVmYzMyMDgw'));
+      curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+      curl_setopt($ch, CURLOPT_HEADER, FALSE);
+      curl_setopt($ch, CURLOPT_POST, TRUE);
+      curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
+      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+      $resp = curl_exec($ch);
+      curl_close($ch);
     }
 
-    public function edit_product_attri($attribute_id){
-      $eco_user_id = $this->session->userdata('eco_user_id');
-      $eco_company_id = $this->session->userdata('eco_company_id');
-      $eco_role_id = $this->session->userdata('eco_role_id');
-      if($eco_user_id == '' && $eco_company_id == ''){ header('location:'.base_url().'User'); }
-
-      $this->form_validation->set_rules('attribute_name', 'Name', 'trim|required');
-      if ($this->form_validation->run() != FALSE) {
-        $update_data = array(
-          'attribute_name' => $this->input->post('attribute_name'),
-          'attribute_addedby' => $eco_user_id,
-          'attribute_date' => date('d-m-Y h:m:s A'),
-        );
-        $this->User_Model->update_info('attribute_id', $attribute_id, 'attribute', $update_data);
-
-        foreach($_POST['input'] as $multi_data){
-          if(isset($multi_data['attribute_val_id'])){
-            $attribute_val_id = $multi_data['attribute_val_id'];
-            if(!isset($multi_data['attribute_val_name'])){
-              $this->User_Model->delete_info('attribute_val_id', $attribute_val_id, 'attribute_val');
-            }else{
-              $this->User_Model->update_info('attribute_val_id', $attribute_val_id, 'attribute_val', $multi_data);
-            }
-          }
-          else{
-            $multi_data['attribute_id'] = $attribute_id;
-            $this->db->insert('attribute_val', $multi_data);
-          }
-        }
-        $this->session->set_flashdata('update_success','success');
-        header('location:'.base_url().'Product/product_attri_list');
-      }
-      $attribute_info = $this->User_Model->get_info('attribute_id', $attribute_id, 'attribute');
-      if($attribute_info == ''){ header('location:'.base_url().'Product/attribute_list'); }
-      foreach($attribute_info as $info){
-        $data['update'] = 'update';
-        $data['attribute_name'] = $info->attribute_name;
-        $data['attribute_status'] = $info->attribute_status;
-      }
-      $data['attribute_val_list'] = $this->User_Model->get_list_by_id('attribute_id',$attribute_id,'','','attribute_val_id','ASC','attribute_val');
-      $this->load->view('Include/head', $data);
-      $this->load->view('Include/navbar', $data);
-      $this->load->view('Product/product_attri', $data);
-      $this->load->view('Include/footer', $data);
-    }
-
-    // Delete Attributes.....
-    public function delete_product_attri($attribute_id){
-      $eco_user_id = $this->session->userdata('eco_user_id');
-      $eco_company_id = $this->session->userdata('eco_company_id');
-      $eco_role_id = $this->session->userdata('eco_role_id');
-      if($eco_user_id == '' && $eco_company_id == ''){ header('location:'.base_url().'User'); }
-      $this->User_Model->delete_info('attribute_id', $attribute_id, 'attribute');
-      $this->User_Model->delete_info('attribute_id', $attribute_id, 'attribute_val');
-      $this->session->set_flashdata('delete_success','success');
-      header('location:'.base_url().'Product/product_attri_list');
-    }
-  /***********************     Inventory Information      ******************************/
-
-    public function inventory_list(){
-      $this->load->view('Include/head');
-      $this->load->view('Include/navbar');
-      $this->load->view('Product/inventory_list');
-      $this->load->view('Include/footer');
-    }
-    public function inventory(){
-      $this->load->view('Include/head');
-      $this->load->view('Include/navbar');
-      $this->load->view('Product/inventory');
-      $this->load->view('Include/footer');
-    }
+    $notification_data['notification_text'] = $notification;
+    $this->User_Model->save_data('notification', $notification_data);
+  }
 }

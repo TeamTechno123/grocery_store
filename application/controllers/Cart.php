@@ -101,50 +101,72 @@ class Cart extends CI_Controller{
   public function modal_view_cart(){
     $output = '';
     $output .='
-      <table class="table table-bordered" id="tbl_modal_cart">
-        <thead>
-          <tr>
-            <th style="width: 10px">#</th>
-            <th>Product</th>
-            <th>MRP</th>
-            <th>Price</th>
-            <th class="" style="width:150px;">Qty</th>
-            <th>Amount</th>
-            <th></th>
-          </tr>
-        </thead>
+      <table class="table w-100" id="tbl_modal_cart">
+
         <tbody>
     ';
     $count = 0;
     foreach ($this->cart->contents() as $items) {
       $count++;
+      $product_img_info = $this->User_Model->get_info_arr_fields('product_img','product_id', $items['product_id'], 'product');
+      $output .='
+        <tr>
+          <td class="px-0"> <img width="60px" src="assets/images/product/'.$product_img_info[0]['product_img'].'" alt=""></td>
+          <td>
+            <p class="mb-0 f-14">'.$items['product_name'].' - '.$items['product_weight'].' '.$items['product_unit'].'</p>
+            <p class="mb-0">
+              <span class="cart_product_price text-success f-14"><b>&#8377;'.$items['product_price'].'</b></span>
+              <del><span class="cart_product_price text-secondary pl-2">&#8377;'.$items['product_mrp'].'</span></del>
+            </p>
+            <p class="mb-0">
+              <span class="cart_product_price text-primary f-14"><b> Subtotal : &#8377;'.$items['subtotal'].'</b></span>
+            </p>
+          </td>
+          <td  class="px-0 text-center">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <button type="button" class="btn btn-outline-secondary btn-sm text-center btn_qty_minus px-1"><i class="fa fa-minus"></i></button>
+            </div>
+            <input type="number" min="1" step="1" class="form-control form-control-sm text-center cart_product_qty"  value="'.$items['qty'].'" >
+            <div class="input-group-append">
+              <button type="button" class="btn btn-outline-secondary btn-sm text-center btn_qty_plus px-1"><i class="fa fa-plus"></i></button>
+            </div>
+          </div>
 
-        $output .='
-          <tr>
-            <td>'.$count.'</td>
-            <td>'.$items['product_name'].' - '.$items['product_weight'].' '.$items['product_unit'].'</td>
-            <td><span class="cart_product_price">&#8377;'.$items['product_mrp'].'</span></td>
-            <td><span class="cart_product_price">&#8377;'.$items['product_price'].'</span></td>
-            <td style="width:150px;">
-              <div class="row">
-                <div class="col-3 text-right px-0">
-                  <button type="button" class="btn btn-outline-secondary btn-sm text-center btn_qty_minus"><i class="fa fa-minus"></i></button>
-                </div>
-                <div class="col-6 text-center px-1">
-                  <input type="number" min="1" step="1" class="form-control form-control-sm text-center cart_product_qty"  value="'.$items['qty'].'" >
-                </div>
-                <div class="col-3 text-left px-0">
-                  <button type="button" class="btn btn-outline-secondary btn-sm text-center btn_qty_plus"><i class="fa fa-plus"></i></button>
-                </div>
-              </div>
-            </td>
-            <td><span class="cart_product_subtotal">&#8377;'.$items['subtotal'].'</span></td>
-            <td>
-              <input type="hidden" class="rowid" value="'.$items['rowid'].'" />
-              <a class="rem_cart_row" id="rem'.$count.'"><i class="fa fa-trash text-danger"></i></a>
-            </td>
-          </tr>
-        ';
+
+            <input type="hidden" class="rowid" value="'.$items['rowid'].'" />
+            <a class="rem_cart_row" id="rem'.$count.'"><i class="fa fa-trash text-danger"></i></a>
+          </td>
+
+        </tr>
+      ';
+
+        // $output .='
+        //   <tr>
+        //     <td>'.$count.'</td>
+        //     <td>'.$items['product_name'].' - '.$items['product_weight'].' '.$items['product_unit'].'</td>
+        //     <td><span class="cart_product_price">&#8377;'.$items['product_mrp'].'</span></td>
+        //     <td><span class="cart_product_price">&#8377;'.$items['product_price'].'</span></td>
+        //     <td style="width:150px;">
+        //       <div class="row">
+        //         <div class="col-3 text-right px-0">
+        //           <button type="button" class="btn btn-outline-secondary btn-sm text-center btn_qty_minus"><i class="fa fa-minus"></i></button>
+        //         </div>
+        //         <div class="col-6 text-center px-1">
+        //           <input type="number" min="1" step="1" class="form-control form-control-sm text-center cart_product_qty"  value="'.$items['qty'].'" >
+        //         </div>
+        //         <div class="col-3 text-left px-0">
+        //           <button type="button" class="btn btn-outline-secondary btn-sm text-center btn_qty_plus"><i class="fa fa-plus"></i></button>
+        //         </div>
+        //       </div>
+        //     </td>
+        //     <td><span class="cart_product_subtotal">&#8377;'.$items['subtotal'].'</span></td>
+        //     <td>
+        //       <input type="hidden" class="rowid" value="'.$items['rowid'].'" />
+        //       <a class="rem_cart_row" id="rem'.$count.'"><i class="fa fa-trash text-danger"></i></a>
+        //     </td>
+        //   </tr>
+        // ';
     }
     if($count == 0){
       $output .='<h4>Cart is Empty</h4>';
@@ -159,18 +181,10 @@ class Cart extends CI_Controller{
       $gst_amt = $gst_amt + $items['product_gst_amt'];
     }
 
-    $output .='
+    $output .='        
         <tr>
-          <td colspan="5" class="text-right text-bold">Total MRP</td>
-          <td  colspan="2" class="text-left cart_total text-bold">&#8377;'.$total_mrp.'</td>
-        </tr>
-        <tr>
-          <td colspan="5" class="text-right text-bold">Total Discount</td>
-          <td  colspan="2" class="text-left cart_total text-bold">&#8377;'.$total_discount.'</td>
-        </tr>
-        <tr>
-          <td colspan="5" class="text-right text-bold">Total</td>
-          <td  colspan="2" class="text-left cart_total text-bold">&#8377;'.$this->cart->total().'</td>
+          <td colspan="2" class="text-right text-bold">Total</td>
+          <td  colspan="1" class="text-left cart_total text-bold">&#8377;'.$this->cart->total().'</td>
         </tr>
         </tbody>
       </table>
@@ -267,7 +281,7 @@ class Cart extends CI_Controller{
     $coupon_info = $this->User_Model->get_info_arr('coupon_code', $coupon_code, 'coupon');
 
     if($coupon_info){
-      $coupon_used_count = $this->User_Model->get_count('coupon_used_id','coupon_id',$coupon_info[0]['coupon_id'],'customer_id',$eco_cust_id,'','','coupon_used');
+      $coupon_used_count = $this->User_Model->get_count('coupon_used_id','coupon_id',$coupon_info[0]['coupon_id'],'customer_id',$eco_cust_id,'coupon_used_status','1','coupon_used');
       $data['final_amount'] = $cart_total;
       $data['is_coupon_appl'] = 0;
       if($coupon_info[0]['coupon_status'] == 0 ){
@@ -376,20 +390,24 @@ class Cart extends CI_Controller{
     if($eco_cust_id == '' || $eco_cust_login == ''){ header('location:'.base_url().'Login'); }
     $cart_total = $this->cart->total();
 
-    $order_data['order_cust_fname '] = $this->input->post('customer_fname');
-    $order_data['order_cust_lname '] = $this->input->post('customer_lname');
-    $order_data['order_cust_addr '] = $this->input->post('customer_address');
-    $order_data['order_cust_city '] = $this->input->post('customer_city');
-    $order_data['order_cust_pin '] = $this->input->post('customer_pin');
-    $order_data['order_cust_mob '] = $this->input->post('customer_mobile');
-    $order_data['order_cust_email '] = $this->input->post('customer_email');
+    $order_data['order_cust_fname'] = $this->input->post('customer_fname');
+    $order_data['order_cust_lname'] = $this->input->post('customer_lname');
+    $order_data['order_cust_addr'] = $this->input->post('customer_address');
+    $order_data['country_id'] = $this->input->post('country_id');
+    $order_data['state_id'] = $this->input->post('state_id');
+    $order_data['city_id'] = $this->input->post('city_id');
+    $order_data['order_cust_pin'] = $this->input->post('customer_pin');
+    $order_data['order_cust_mob'] = $this->input->post('customer_mobile');
+    $order_data['order_cust_email'] = $this->input->post('customer_email');
 
     $order_data['order_no'] = $this->User_Model->get_count_no('order_no', 'order_tbl');
     $order_data['order_date'] = date('d-m-Y');
-    $order_data['customer_id '] = $eco_cust_id;
-    $order_data['payment_status'] = 1;
+    $order_data['customer_id'] = $eco_cust_id;
     $order_data['order_added_date'] = date('d-m-Y h:i:s A');
     $order_data['order_addedby'] = 0;
+
+    $order_data['payment_status'] = 1;
+    $order_data['payment_type'] = 1;
 
 
     $chk_redeem_point = $this->input->post('chk_redeem_point');

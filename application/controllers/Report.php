@@ -9,45 +9,24 @@ class Report extends CI_Controller{
     $this->load->model('Report_Model');
   }
 
-  public function order_print(){
-    $this->load->view('Report/order_print');
-  }
+  // public function order_print(){
+  //   $this->load->view('Report/order_print');
+  // }
+  //
+  // public function receipt_print(){
+  //   $this->load->view('Report/receipt_print');
+  // }
 
-  public function customer_report(){
+  public function active_memberships(){
     $eco_user_id = $this->session->userdata('eco_user_id');
     $eco_company_id = $this->session->userdata('eco_company_id');
     $eco_role_id = $this->session->userdata('eco_role_id');
     if($eco_user_id == '' || $eco_company_id == '' || $eco_role_id != 1){ header('location:'.base_url().'User'); }
-    $this->load->view('Include/head');
-    $this->load->view('Include/navbar');
-    $this->load->view('Report/customer_report');
-    $this->load->view('Include/footer');
-  }
-
-  public function order_report(){
-    $eco_user_id = $this->session->userdata('eco_user_id');
-    $eco_company_id = $this->session->userdata('eco_company_id');
-    $eco_role_id = $this->session->userdata('eco_role_id');
-    if($eco_user_id == '' || $eco_company_id == '' || $eco_role_id != 1){ header('location:'.base_url().'User'); }
-    $this->load->view('Include/head');
-    $this->load->view('Include/navbar');
-    $this->load->view('Report/order_report');
-    $this->load->view('Include/footer');
-  }
-
-  public function vendor_report(){
-    $eco_user_id = $this->session->userdata('eco_user_id');
-    $eco_company_id = $this->session->userdata('eco_company_id');
-    $eco_role_id = $this->session->userdata('eco_role_id');
-    if($eco_user_id == '' || $eco_company_id == '' || $eco_role_id != 1){ header('location:'.base_url().'User'); }
-    $this->load->view('Include/head');
-    $this->load->view('Include/navbar');
-    $this->load->view('Report/vendor_report');
-    $this->load->view('Include/footer');
-  }
-
-  public function receipt_print(){
-    $this->load->view('Report/receipt_print');
+    $data['customer_list'] = $this->User_Model->get_list2('customer_id','DESC','customer');
+    $this->load->view('Include/head', $data);
+    $this->load->view('Include/navbar', $data);
+    $this->load->view('Report/active_memberships', $data);
+    $this->load->view('Include/footer', $data);
   }
 
   public function customer_report(){

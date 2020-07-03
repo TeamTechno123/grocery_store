@@ -17,7 +17,7 @@
         <ol>
           <li class="text-div">Our products are thoroughly checked for the quality before delivering.</li>
           <li class="text-div">We insist that the customer has thoroughly checked the quality of grocery at the time of delivery.</li>
-          <li class="text-div">However in case of grocery, if the customer is unable to check the quality at the time of delivery, he/she should inform the same on the Customer care email:Needs On Door@gmail.com/ contact no: 9588617281 within 24 hrs. Of delivery.</li>
+          <li class="text-div">However in case of grocery, if the customer is unable to check the quality at the time of delivery, he/she should inform the same on the Customer care email:kiranabhara@gmail.com/ contact no: 9588617281 within 24 hrs. Of delivery.</li>
           <li class="text-div">The customer could get an exchange any of the ordered Pack only under following conditions.
               <ul>
                 <li class="text-div">Packets that have signs of rotting.</li>

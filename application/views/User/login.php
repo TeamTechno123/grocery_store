@@ -20,7 +20,7 @@
 <body class="hold-transition login-page">
 <div class="login-box">
   <div class="login-logo">
-    <b><?php echo $title; ?> Login</b>
+    <b><?php //echo $title; ?> Login</b>
   </div>
   <!-- /.login-logo -->
   <div class="card">

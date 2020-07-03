@@ -9,7 +9,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-12 mt-1">
-            <h4>USER INFORMATION</h4>
+            <h4>USER INFORMATION <?php if(isset($page_title)){ echo '('.$page_title.')';} ?></h4>
           </div>
         </div>
       </div><!-- /.container-fluid -->
@@ -23,7 +23,7 @@
             <!-- general form elements -->
             <div class="card">
             <div class="card-header">
-              <h3 class="card-title"><i class="fa fa-list"></i> List User Information</h3>
+              <h3 class="card-title"><i class="fa fa-list"></i> List <?php if(isset($page_title)){ echo '('.$page_title.')';} ?> User Information</h3>
               <div class="card-tools">
                 <a href="add_user" class="btn btn-sm btn-block btn-primary">Add User</a>
               </div>

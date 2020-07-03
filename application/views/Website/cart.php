@@ -199,7 +199,7 @@
 
   // Manual Qty...
   $(document).on('change', '#myCartPage .cart_product_qty', function(){
-    var product_qty =  $(this).closest('tr').find('.cart_product_qty').val();    
+    var product_qty =  $(this).closest('tr').find('.cart_product_qty').val();
     var rowid = $(this).closest('tr').find('.rowid').val();
     $.ajax({
       url:'<?php echo base_url(); ?>Cart/update_qty',

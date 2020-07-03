@@ -205,6 +205,7 @@ class Website_Model extends CI_Model{
     $this->db->select('*');
     $this->db->from('point_use');
     $this->db->where('customer_id',$customer_id);
+    $this->db->where('point_use_status','1');
     $this->db->where("str_to_date(point_use_date,'%d-%m-%Y') BETWEEN str_to_date('$from_date','%d-%m-%Y') AND str_to_date('$to_date','%d-%m-%Y')");
     $query = $this->db->get();
     $result = $query->result();

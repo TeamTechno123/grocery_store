@@ -46,7 +46,7 @@
                       </div>
                       <div class="form-group col-md-6">
                         <label>Image</label>
-                        <input type="file" class="form-control form-control-sm" name="category_img" id="category_img" class="form-control" id="exampleInputFile" >
+                        <input type="file" class="form-control form-control-sm" name="category_img" id="category_img" class="form-control" id="exampleInputFile" required>
                       </div>
                       <?php if(isset($update)){ ?>
                         <div class="form-group col-md-6">
@@ -78,7 +78,7 @@
                     <?php } else{ ?>
                       <button id="btn_save" type="submit" class="btn btn-success px-4">Save</button>
                     <?php } ?>
-                    <a href="<?php echo base_url() ?>User/category_list" class="btn btn-default ml-4">Cancel</a>
+                    <a href="" class="btn btn-default ml-4">Cancel</a>
                   </div>
                 </div>
               </form>

@@ -16,6 +16,11 @@
   <!-- Right navbar links -->
   <ul class="navbar-nav ml-auto">
     <li class="nav-item">
+      <a class="btn btn-outline-info btn-sm" href="<?php echo base_url(); ?>User/dashboard">
+        Dashboard
+      </a>
+    </li>
+    <li class="nav-item">
       <a class="nav-link" href="<?php echo base_url(); ?>User/logout">
         <i class="fas fa-sign-out-alt"></i>
       </a>
@@ -154,7 +159,7 @@
                 <p>Pincode</p>
               </a>
             </li>
-            <li class="nav-item">
+            <!-- <li class="nav-item">
               <a href="<?php echo base_url(); ?>Master/team_list" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Team</p>
@@ -165,7 +170,7 @@
                 <i class="far fa-circle nav-icon"></i>
                 <p>Gallery</p>
               </a>
-            </li>
+            </li> -->
             <li class="nav-item">
               <a href="<?php echo base_url(); ?>Master/offer_list" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
@@ -176,6 +181,12 @@
               <a href="<?php echo base_url(); ?>Master/unit_list" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Unit</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="<?php echo base_url(); ?>Master/store_list" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Store</p>
               </a>
             </li>
             <!-- <li class="nav-item">
@@ -261,18 +272,6 @@
                 <p>Coupon</p>
               </a>
             </li>
-            <li class="nav-item">
-              <a href="<?php echo base_url(); ?>Product/purchase_list" class="nav-link">
-                <i class="far fa-circle nav-icon"></i>
-                <p>Purchase</p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="<?php echo base_url(); ?>Product/sale_list" class="nav-link">
-                <i class="far fa-circle nav-icon"></i>
-                <p>Sales</p>
-              </a>
-            </li>
           </ul>
         </li>
       <?php } if($eco_role_id == 1 || $eco_role_id == 2 || $eco_role_id == 3 || $eco_role_id == 4 || $eco_role_id == 5){ ?>
@@ -320,12 +319,12 @@
             <p>Transaction <i class="right fas fa-angle-left"></i></p>
           </a>
           <ul class="nav nav-treeview" style="display: none;">
-            <li class="nav-item">
+            <!-- <li class="nav-item">
               <a href="<?php echo base_url(); ?>Transaction/sale_list" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Sale</p>
               </a>
-            </li>
+            </li> -->
             <li class="nav-item">
               <a href="<?php echo base_url(); ?>Transaction/purchase_list" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
@@ -356,6 +355,14 @@
               <i class="right fas fa-angle-left"></i>
             </p>
           </a>
+          <ul class="nav nav-treeview" style="display: none;">
+            <li class="nav-item">
+              <a href="<?php echo base_url(); ?>Report/active_memberships" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Active Memberships</p>
+              </a>
+            </li>
+          </ul>
           <ul class="nav nav-treeview" style="display: none;">
             <li class="nav-item">
               <a href="<?php echo base_url(); ?>Report/customer_report" class="nav-link">
@@ -395,6 +402,12 @@
           <p>Membership Approval</p>
         </a>
       </li>
+      <li class="nav-item">
+        <a href="<?php echo base_url(); ?>User/sales_exec_location_list" class="nav-link">
+          <i class="nav-icon fas fa-map-marker-alt"></i>
+          <p>Sales Executive Location</p>
+        </a>
+      </li>
     <?php } ?>
     <!-- Delivery Boy Order List -->
     <?php if($eco_role_id == 7){ ?>
@@ -410,6 +423,3 @@
     </div>
   <!-- /.sidebar -->
   </aside>
-
-
-  

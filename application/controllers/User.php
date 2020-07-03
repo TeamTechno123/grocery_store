@@ -5,7 +5,7 @@ class User extends CI_Controller{
   public function __construct(){
     parent::__construct();
     $this->load->model('User_Model');
-    // $this->load->model('Transaction_Model');
+    $this->load->model('Order_Model');
   }
 
   public function logout(){
@@ -56,7 +56,6 @@ class User extends CI_Controller{
     $data['team_cnt'] = $this->User_Model->get_count('team_id','','','','','','','team');
 
     $data['vendor_cnt'] = $this->User_Model->get_count('vendor_id','','','','','','','vendor');
-    $data['customer_cnt'] = $this->User_Model->get_count('customer_id','','','','','','','customer');
     $data['act_mem_cnt'] = $this->User_Model->get_count('cust_mem_id','cust_mem_status',1,'','','','','cust_membership');
 
     $data['offer_cnt'] = $this->User_Model->get_count('offer_id','','','','','','','offer');
@@ -65,12 +64,38 @@ class User extends CI_Controller{
     $data['product_cnt'] = $this->User_Model->get_count('product_id','','','','','','','product');
     $data['coupon_cnt'] = $this->User_Model->get_count('coupon_id','','','','','','','coupon');
     $data['unit_cnt'] = $this->User_Model->get_count('unit_id','','','','','','','unit');
+    $data['purchase_cnt'] = $this->User_Model->get_count('purchase_id','','','','','','','purchase');
 
     $data['sales_executive_list'] = $this->User_Model->get_list_by_id('role_id',5,'','','user_id','ASC','user');
     $data['reseller_list'] = $this->User_Model->get_list_by_id('role_id',3,'','','user_id','ASC','user');
     $data['office_emp_list'] = $this->User_Model->get_list_by_id('role_id',2,'','','user_id','ASC','user');
 
     $data['mem_scheme_list'] = $this->User_Model->get_list_by_id('','','','','mem_sch_id','ASC','membership_scheme');
+
+    if($eco_role_id == 1){
+      $data['customer_cnt'] = $this->User_Model->get_count('customer_id','','','','','','','customer');
+    } else{
+      $data['customer_cnt'] = $this->User_Model->get_count('customer_id','customer_addedby',$eco_user_id,'','','','','customer');
+    }
+    if($eco_role_id == 1){
+      $data['order_cnt'] = $this->User_Model->get_count('order_id','','','','','','','order_tbl');
+    } elseif ($eco_role_id == 3) {
+      $data['order_cnt'] = $this->User_Model->get_count('order_id','order_addedby',$eco_user_id,'','','','','order_tbl');
+    } else{
+      $data['order_cnt'] = $this->User_Model->get_count('order_id','','','','','','','order_tbl');
+    }
+
+
+    if($eco_role_id == 7){
+      $order_list = $this->Order_Model->delivery_boy_order_list($eco_user_id);
+      if(!$order_list){
+        $data['delivery_boy_order_cnt'] = 0;
+      } else{
+        $data['delivery_boy_order_cnt'] = count($order_list);
+      }
+    }
+
+
 
     // echo 'office_emp_list <br>';
     // print_r($data['office_emp_list']);
@@ -80,6 +105,20 @@ class User extends CI_Controller{
     if($eco_role_id == 1 || $eco_role_id == 2){ $this->load->view('User/admin-dashboard', $data); }
     else{ $this->load->view('User/user-dashboard', $data);  }
     $this->load->view('Include/footer', $data);
+  }
+
+  public function dash_user_list($role_id){
+    $eco_user_id = $this->session->userdata('eco_user_id');
+    $eco_company_id = $this->session->userdata('eco_company_id');
+    $eco_role_id = $this->session->userdata('eco_role_id');
+    if($eco_user_id == '' || $eco_company_id == ''){ header('location:'.base_url().'User'); }
+
+    $data['user_list'] = $this->User_Model->get_list_by_id('role_id',$role_id,'','','user_id','DESC','user');
+
+    $this->load->view('Include/head',$data);
+    $this->load->view('Include/navbar',$data);
+    $this->load->view('User/user_list',$data);
+    $this->load->view('Include/footer',$data);
   }
 
 /**************************      Company Information      ********************************/
@@ -215,6 +254,64 @@ class User extends CI_Controller{
     $this->load->view('Include/navbar');
     $this->load->view('User/booklet_order');
     $this->load->view('Include/footer');
+  }
+
+  public function update_location(){
+    $user_id = $_POST['user_id'];
+    $update_data['user_latitude'] = $_POST['latitude'];
+    $update_data['user_longitude'] = $_POST['longitude'];
+    $this->User_Model->update_info('user_id', $user_id, 'user', $update_data);
+    // echo $update_data['user_latitude'].', '.$update_data['user_longitude'];
+  }
+
+  public function sales_exec_location_list(){
+    $eco_user_id = $this->session->userdata('eco_user_id');
+    $eco_company_id = $this->session->userdata('eco_company_id');
+    $eco_role_id = $this->session->userdata('eco_role_id');
+    if($eco_user_id == '' || $eco_company_id == ''){ header('location:'.base_url().'User'); }
+
+    // $user_latitude = '19.7514798';
+    // $user_longitude = '75.7138884';
+    // $address = $this->getAddress($user_latitude,$user_longitude);
+    // print_r($address);
+
+    $user_list = $this->User_Model->get_list_by_id('role_id','5','','','user_id','DESC','user');
+    foreach ($user_list as $user_list1) {
+      $user_latitude = $user_list1->user_latitude;
+      $user_longitude = $user_list1->user_longitude;
+      $address = $this->getAddress($user_latitude,$user_longitude);
+
+      $address = $address?$address:'Not found';
+      $user_list1->current_location = $address;
+    }
+    $data['user_list'] = $user_list;
+
+    $this->load->view('Include/head',$data);
+    $this->load->view('Include/navbar',$data);
+    $this->load->view('Transaction/sales_exec_location_list',$data);
+    $this->load->view('Include/footer',$data);
+  }
+
+    public function getAddress($latitude,$longitude){
+      if(!empty($latitude) && !empty($longitude)){
+          //Send request and receive json data by address
+          $geocodeFromLatLong = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?latlng='.trim($latitude).','.trim($longitude).'&sensor=false&key=AIzaSyBsofn1lNcn-ARq2oP3sGGX-ESFq78H8No');
+          if($geocodeFromLatLong){
+            $output = json_decode($geocodeFromLatLong);
+            $status = $output->status;
+            $address = ($status=="OK")?$output->results[1]->formatted_address:''; //Get address from json data
+            if(!empty($address)){
+                return $address; //Return address of the given latitude and longitude
+            }else{
+                return false;
+            }
+          } else{
+            return false;
+          }
+            // return $output;
+      }else{
+        return false;
+      }
   }
 
 }

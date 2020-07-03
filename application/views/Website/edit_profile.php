@@ -13,13 +13,13 @@
             <div class="col-md-12">
               <form action="" method="post" enctype="multipart/form-data">
                 <div class="form-group row">
-                  <label for="first_name" class="col-sm-2 col-form-label">First Name </label>
+                  <label for="first_name" class="col-sm-2 col-form-label">First Name</label>
                   <div class="col-sm-10">
                     <input type="text" class="form-control" name="customer_fname" id="customer_fname" value="<?php echo $eco_cust_info['customer_fname']; ?>" required>
                   </div>
                 </div>
                 <div class="form-group row">
-                  <label for="inputEmail3" class="col-sm-2 col-form-label">Last Name </label>
+                  <label for="inputEmail3" class="col-sm-2 col-form-label">Last Name</label>
                   <div class="col-sm-10">
                     <input type="text" class="form-control" name="customer_lname" id="customer_lname" value="<?php echo $eco_cust_info['customer_lname']; ?>" required>
                   </div>
@@ -31,19 +31,19 @@
                   </div>
                 </div>
                 <div class="form-group row">
-                  <label for="inputEmail3" class="col-sm-2 col-form-label">Mobile </label>
+                  <label for="inputEmail3" class="col-sm-2 col-form-label">Mobile</label>
                   <div class="col-sm-10">
                     <input type="number" class="form-control" name="customer_mobile" id="customer_mobile" value="<?php echo $eco_cust_info['customer_mobile']; ?>" required>
                   </div>
                 </div>
                 <div class="form-group row">
-                  <label for="inputEmail3" class="col-sm-2 col-form-label">Date of Birth  </label>
+                  <label for="inputEmail3" class="col-sm-2 col-form-label">Date of Birth</label>
                   <div class="col-sm-10">
                     <input type="text" class="form-control" name="customer_dob" value="<?php echo $eco_cust_info['customer_dob']; ?>" id="date1" data-target="#date1" data-toggle="datetimepicker" required>
                   </div>
                 </div>
                 <div class="form-group row">
-                  <label for="inputEmail3" class="col-sm-2 col-form-label">Profile Image </label>
+                  <label for="inputEmail3" class="col-sm-2 col-form-label">Profile Image</label>
                   <div class="col-sm-10">
                     <input type="file" class="form-control" name="customer_img" id="customer_img">
                     <input type="hidden" name="old_img" value="<?php echo $eco_cust_info['customer_img']; ?>">
@@ -58,48 +58,7 @@
               </form>
             </div>
           </div>
-        <!-- <br> <hr> -->
-
-            <!-- <h2>Address Details</h2>
-            <hr class="hr-web">
-            <div class="row">
-              <div class="col-md-12">
-                <div class="form-group row">
-                    <label for="first_name" class="col-sm-2 col-form-label">Address </label>
-                    <div class="col-sm-10">
-                    <textarea name="name" class="form-control" rows="3" cols="95"></textarea>  </div>
-                  </div>
-            <div class="form-group row">
-                <label for="inputEmail3" class="col-sm-2 col-form-label">City  </label>
-                <div class="col-sm-10">
-                  <input type="text" class="form-control" name="city" id="city" placeholder="City">
-                </div>
-              </div>
-
-              <div class="form-group row">
-                  <label for="inputEmail3" class="col-sm-2 col-form-label">State </label>
-                  <div class="col-sm-10">
-                    <input type="text" class="form-control" name="state" id="state" placeholder="State">
-                  </div>
-                </div>
-
-                <div class="form-group row">
-                    <label for="inputEmail3" class="col-sm-2 col-form-label">Pincode  </label>
-                    <div class="col-sm-10">
-                      <input type="text" class="form-control" name="pincode" id="pincode" placeholder="Pincode">
-                    </div>
-                  </div>
-
-
-                      <div class="row text-center ">
-                        <div class="col-8 offset-md-2 mt-3">
-                          <button type="button" class="btn btn-outline-success mr-3">Save Address</button>   <button type="button" class="btn btn-outline-secondary">Cancel</button>
-                        </div>
-                      </div>
-                  <br>
-                  </div>
-            </div> -->
-          </div>
+        </div>
       </div>
     </div>
   </div>

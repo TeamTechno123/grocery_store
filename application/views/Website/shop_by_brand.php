@@ -1,171 +1,8 @@
 <?php include ('header.php'); ?>
 
 <section class="gorcery-list">
-  <div class="container">
+  <div class="container-fluid">
     <div class="row">
-
-      <div class="col-md-12">
-
-        <div class="dropdown">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Dropdown button
-            </button>
-            <div class="dropdown-menu dropdown-megamenu" aria-labelledby="dropdownMenuButton">
-            <div class="mega-menu">
-              <div class="row">
-              <div class="col-md-4">
-                <ul class="dropdown-main-category">
-                  <li class ="expander">home </li>
-                  <li class="expander2">about</li>
-                  <li>contact</li>
-                  <li>policy</li>
-                  <li>product</li>
-                </ul>
-              </div>
-
-              <div class="col-md-8" id="TableData">
-                <div class="row">
-                  <div class="col-6  bg-grey">
-                    <ul  >
-                      <li>home </li>
-                      <li>about</li>
-                      <li>contact</li>
-                      <li>policy</li>
-                      <li>product</li>
-                    </ul>
-                  </div>
-
-                  <div class="col-6">
-                    <ul>
-                      <li>home </li>
-                      <li>about</li>
-                      <li>contact</li>
-                      <li>policy</li>
-                      <li>product</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-md-8" id="TableData2">
-                <div class="row">
-                  <div class="col-6  bg-grey">
-                    <ul  >
-                      <li>home2 </li>
-                      <li>about</li>
-                      <li>contact</li>
-                      <li>policy</li>
-                      <li>product</li>
-                    </ul>
-                  </div>
-
-                  <div class="col-6">
-                    <ul>
-                      <li>home2 </li>
-                      <li>about</li>
-                      <li>contact</li>
-                      <li>policy</li>
-                      <li>product</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-            </div>
-            </div>
-          </div>
-
-        <nav class="navbar navbar-expand-lg navbar-light bg-light" id="mega-menu">
-            <a class="navbar-brand" href="#">Navbar</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNavDropdown">
-              <ul class="navbar-nav">
-        <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Dropdown link
-        </a>
-        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-          <li class="dropdown-submenu">
-            <a class="dropdown-item dropdown-toggle" href="#">frouts And Vegitable</a>
-            <ul class="dropdown-menu mega-menu-div ">
-              <div class="row">
-                <div class="col-4">
-                  <li><a class="dropdown-item" href="#">Mango</a></li>
-                  <li><a class="dropdown-item" href="#">Mango</a></li>
-                  <li><a class="dropdown-item" href="#">Banana</a></li>
-                </div>
-                <div class="col-4">
-                  <li><a class="dropdown-item" href="#">Mango</a></li>
-                  <li><a class="dropdown-item" href="#">Mango</a></li>
-                  <li><a class="dropdown-item" href="#">Banana</a></li>
-                </div>
-                <div class="col-4">
-                  <li><a class="dropdown-item" href="#">Mango</a></li>
-                  <li><a class="dropdown-item" href="#">Mango</a></li>
-                  <li><a class="dropdown-item" href="#">Banana</a></li>
-                </div>
-              </div>
-            </ul>
-          </li>
-          <li class="dropdown-submenu">
-            <a class="dropdown-item dropdown-toggle" href="#">Oil Ang Ghee</a>
-            <ul class="dropdown-menu mega-menu-div">
-              <div class="row">
-                <div class="col-4">
-                  <li><a class="dropdown-item" href="#">Mango</a></li>
-                  <li><a class="dropdown-item" href="#">Mango</a></li>
-                  <li><a class="dropdown-item" href="#">Banana</a></li>
-                </div>
-                <div class="col-4">
-                  <li><a class="dropdown-item" href="#">Mango</a></li>
-                  <li><a class="dropdown-item" href="#">Mango</a></li>
-                  <li><a class="dropdown-item" href="#">Banana</a></li>
-                </div>
-                <div class="col-4">
-                  <li><a class="dropdown-item" href="#">Mango</a></li>
-                  <li><a class="dropdown-item" href="#">Mango</a></li>
-                  <li><a class="dropdown-item" href="#">Banana</a></li>
-                </div>
-              </div>
-            </ul>
-          </li>
-          <li class="dropdown-submenu">
-            <a class="dropdown-item dropdown-toggle" href="#">Bakery</a>
-            <ul class="dropdown-menu mega-menu-div">
-              <div class="row">
-                <div class="col-4">
-                  <li><a class="dropdown-item" href="#">Mango</a></li>
-                  <li><a class="dropdown-item" href="#">Mango</a></li>
-                  <li><a class="dropdown-item" href="#">Banana</a></li>
-                </div>
-                <div class="col-4">
-                  <li><a class="dropdown-item" href="#">Mango</a></li>
-                  <li><a class="dropdown-item" href="#">Mango</a></li>
-                  <li><a class="dropdown-item" href="#">Banana</a></li>
-                </div>
-                <div class="col-4">
-                  <li><a class="dropdown-item" href="#">Mango</a></li>
-                  <li><a class="dropdown-item" href="#">Mango</a></li>
-                  <li><a class="dropdown-item" href="#">Banana</a></li>
-                </div>
-              </div>
-            </ul>
-          </li>
-        </ul>
-      </li>
-    </ul>
-  </div>
-</nav>
-</div>
-
-
-
-
-
-
-
       <div class="col-md-3 d-none d-sm-block">
           <!-- <div class="card p-30">
             <div class="input-group mb-3">
@@ -177,7 +14,7 @@
           </div>
           <br><br> -->
           <?php include('sidebar_category.php'); ?>
-
+          
       </div>
 
       <div class="col-md-9">
@@ -217,20 +54,9 @@
           </div>
 
           <div class="row">
-            <div class="col-md-6 ">
+            <div class="col-md-12 text-center">
               <h4>Brand Store</h4>
             </div>
-            <div class="col-md-3 offset-md-3 text-right mb-4">
-                  <select class="form-control form-control-sm">
-                    <option>Popularity</option>
-                    <option>Price : Low to High</option>
-                    <option>Price : High to Low</option>
-                    <option>% more </option>
-                    <option>heighest Rating</option>
-                  </select>
-            </div>
-
-
             <?php if($brand_list){ foreach ($brand_list as $brand_list1) {
               $brand_name = urlencode($brand_list1->manufacturer_name);
             ?>
@@ -337,18 +163,4 @@
   //     });
   //   }
   // });
-
-
-  $(function() {
-$('.expander').hover(function() {
-    $('#TableData').show();
-    $('#TableData2').hide();
-});
-});
-  $(function() {
-$('.expander2').hover(function() {
-    $('#TableData2').show();
-    $('#TableData').hide();
-});
-});
 </script>

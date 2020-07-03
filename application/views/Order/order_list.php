@@ -40,7 +40,8 @@
                   <th class="wt_100">Date</th>
                   <th>Customer Name</th>
                   <th class="wt_75">Amount</th>
-                  <th class="wt_75">Status</th>
+                  <th class="wt_100">Status</th>
+                  <th class="wt_75">Payment</th>
                   <th class="wt_75">Action</th>
                 </tr>
                 </thead>
@@ -54,17 +55,31 @@
                     <td><?php echo $list->order_date; ?></td>
                     <td><?php echo $list->customer_fname.' '.$list->customer_lname; ?></td>
                     <td><?php echo $list->order_total_amount; ?></td>
+                    <td class="text-center">
+                      <?php if($list->payment_status == 2){
+                        echo '<span class="text-danger">Canceled</span>';
+                      } else { ?>
+                        <a href="<?php echo base_url(); ?>Order/update_order_status/<?php echo $list->order_id; ?>" class="btn btn-sm btn-outline-info w-100"><?php echo $list->order_status_name; ?></a>
+                        <!-- <button  type="button" class="btn btn-sm btn-outline-info w-100 change_status" status="<?php echo $list->order_status; ?>" id="order_<?php echo $list->order_id; ?>" order_id="<?php echo $list->order_id; ?>" order_assign_to="<?php echo $list->order_assign_to; ?>" data-toggle="modal" data-target="#exampleModal">
+                          <?php echo $list->order_status_name; ?>
+                        </button> -->
+                      <?php } ?>
+                    </td>
                     <td>
-                      <button  type="button" class="btn btn-sm btn-outline-info w-100 change_status" status="<?php echo $list->order_status; ?>" id="order_<?php echo $list->order_id; ?>" order_id="<?php echo $list->order_id; ?>" order_assign_to="<?php echo $list->order_assign_to; ?>" data-toggle="modal" data-target="#exampleModal">
-                        <?php echo $list->order_status_name; ?>
-                      </button>
+                      <?php if($list->payment_status == 2){
+                        echo '<span class="text-danger text-bold">Canceled</span>';
+                      } elseif ($list->payment_status == 1) {
+                        echo '<span class="text-success text-bold">Paid</span>';
+                      } else {
+                        echo '<span class="text-warning text-bold">Unpaid</span>';
+                      } ?>
                     </td>
                     <td class="text-center">
                       <a class="ml-2 text-success" href="<?php echo base_url(); ?>Order/order_details/<?php echo $list->order_id; ?>"> <i class="fa fa-eye"></i> </a>
-                      <?php //if($eco_role_id == 1 || $eco_role_id == 2){ ?>
+                      <?php if($list->order_status == 1 && $list->order_addedby != 0){ ?>
                       <a class="ml-2 text-primary" href="<?php echo base_url(); ?>Order/edit_order/<?php echo $list->order_id; ?>"> <i class="fa fa-edit"></i> </a>
-                      <a href="<?php echo base_url(); ?>Order/delete_order/<?php echo $list->order_id; ?>" onclick="return confirm('Delete this Order Information');" class="ml-2 text-danger"> <i class="fa fa-trash"></i> </a>
-                      <?php //} ?>
+                      <!-- <a href="<?php echo base_url(); ?>Order/delete_order/<?php echo $list->order_id; ?>" onclick="return confirm('Delete this Order Information');" class="ml-2 text-danger"> <i class="fa fa-trash"></i> </a> -->
+                      <?php } ?>
                     </td>
                   <?php } ?>
                   </tr>

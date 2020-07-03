@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Needs On Doors | Log in</title>
+  <title>Needs On Door | Log in</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- Font Awesome -->
@@ -27,7 +27,7 @@
 <div class="container ">
   <div class="row">
     <div class="col-md-6 col-6 text-left">
-      <a href="<?php echo base_url(); ?>"> <img class="top-img" src="<?php echo base_url(); ?>assets/images//new/newlogo.png" alt="" ></a>
+      <a href="<?php echo base_url(); ?>"> <img class="top-img" src="<?php echo base_url(); ?>assets/images/kb_logo.png" alt="" ></a>
     </div>
      <div class="col-md-6 col-6  text-right">
       <img class="top-img my-auto" src="<?php echo base_url(); ?>assets/images/play.png" alt="">
@@ -35,10 +35,7 @@
   </div>
 </div>
 
-<div class="container-fluid">
-
-
-<div class="hold-transition login-page bg-grocery" width="100%" >
+<div class="hold-transition login-page bg-grocery" >
 <div class="login-box">
   <div class="login-logo">
     <!-- <b class="text-white">Login</b> -->
@@ -90,7 +87,6 @@
 
 
 
-</div>
 </div>
 </div>
 <!-- /.login-box -->

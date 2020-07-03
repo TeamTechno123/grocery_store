@@ -31,7 +31,8 @@
                     ?>
                     <p class="card-text">From <strong><?php echo $today; ?></strong> To <strong><?php echo $cust_mem_end_date; ?></strong></p>
                     <!-- <p class="card-text"><?php echo $mem_sch_list->mem_sch_point; ?> points </p> -->
-                    <a href="#" class="btn btn-primary Merriweather btn-success select_shceme" data-toggle="modal" data-target="#membership_details">Join only in <span class="f-18 ml-1" >&#8377;</span> <?php echo $mem_sch_list->mem_sch_amt; ?>  </a>
+                    <a href="<?php echo base_url(); ?>Master/get_membership_details/<?php echo $mem_sch_list->mem_sch_id; ?>" class="btn Merriweather btn-success">Join only in <span class="f-18 ml-1" >&#8377;</span> <?php echo $mem_sch_list->mem_sch_amt; ?>  </a>
+                    <!-- <a href="#" class="btn btn-primary Merriweather btn-success select_shceme" data-toggle="modal" data-target="#membership_details">Join only in <span class="f-18 ml-1" >&#8377;</span> <?php echo $mem_sch_list->mem_sch_amt; ?>  </a> -->
                     <input class="txt_scheme_info" type="hidden" mem_sch_id="<?php echo $mem_sch_list->mem_sch_id; ?>" mem_sch_name="<?php echo $mem_sch_list->mem_sch_name; ?>" mem_sch_valid="<?php echo $mem_sch_list->mem_sch_valid; ?>" mem_start_date="<?php echo $today; ?>" mem_end_date="<?php echo $cust_mem_end_date; ?>" >
                   </div>
                 </div>

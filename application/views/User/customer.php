@@ -22,11 +22,11 @@
             <!-- general form elements -->
             <div class="card card-default">
               <div class="card-header">
-                <h3 class="card-title">Add Customer</h3>
+                <h3 class="card-title">Add Customer </h3>
               </div>
               <!-- /.card-header -->
               <!-- form start -->
-              <form class="m-0 input_form" id="form_action" role="form" action="" method="post" autocomplete="off">
+              <form class="m-0 input_form" action="" method="post" autocomplete="off">
                 <div class="card-body row">
                   <div class="col-md-8 offset-md-2">
                     <div class="row">
@@ -34,9 +34,9 @@
                         <label>KBC Membership Options</label>
                         <select class="form-control select2" name="mem_sch_id" id="mem_sch_id" data-placeholder="KBC Membership Options" <?php if(isset($update)){ echo 'disabled'; } ?> required>
                           <option value="">KBC Membership Options</option>
-                          <?php if(isset($customer_member_list)){ foreach ($customer_member_list as $list) { ?>
-                          <option value="<?php echo $list->mem_sch_id; ?>" <?php if(isset($customer_info) && $customer_info['mem_sch_id'] == $list->mem_sch_id){ echo 'selected'; } if(isset($mem_sch_id) && $mem_sch_id == $list->mem_sch_id){ echo 'selected'; } ?>><?php echo $list->mem_sch_name.' - '.$list->mem_sch_valid.'Days'; ?></option>
-                          <?php } } ?>
+                          <?php foreach ($customer_member_list as $list) { ?>
+                            <option value="<?php echo $list->mem_sch_id; ?>" <?php if(isset($customer_info) && $customer_info['mem_sch_id'] == $list->mem_sch_id){ echo 'selected'; } if(isset($mem_sch_id) && $mem_sch_id == $list->mem_sch_id){ echo 'selected'; } ?>><?php echo $list->mem_sch_name.' - '.$list->mem_sch_valid.'Days'; ?></option>
+                          <?php } ?>
                         </select>
                       </div>
                       <div class="form-group col-md-6">
@@ -49,7 +49,7 @@
                       </div>
                       <div class="form-group col-md-6">
                         <label>Date Of Birth*</label>
-                        <input type="text" class="form-control form-control-sm" name="customer_dob" id="date1" data-target="#date1" data-toggle="datetimepicker" value="<?php if(isset($customer_info)){ echo $customer_info['customer_dob']; } else{ echo date('d-m-Y'); } ?>" required>
+                        <input type="text" class="form-control form-control-sm" name="customer_dob" id="date1" data-target="#date1" data-toggle="datetimepicker" value="<?php if(isset($customer_info)){ echo $customer_info['customer_dob']; } else{ echo date('d-m-Y'); } ?>">
                       </div>
                       <div class="form-group col-md-3 mb-0">
                         <label for="">Gender : </label>
@@ -66,7 +66,7 @@
                       </div>
                       <div class="form-group col-md-6">
                         <label>Mobile*</label>
-                        <input type="number" min="6000000000" max="9999999999" class="form-control form-control-sm" name="customer_mobile" id="customer_mobile" value="<?php if(isset($customer_info)){ echo $customer_info['customer_mobile']; } ?>" required>
+                        <input type="number" min="5000000000" max="9999999999" class="form-control form-control-sm" name="customer_mobile" id="customer_mobile" value="<?php if(isset($customer_info)){ echo $customer_info['customer_mobile']; } ?>" required>
                       </div>
                       <div class="form-group col-md-6">
                         <label>Email</label>
@@ -76,22 +76,44 @@
                         <label>Address*</label>
                         <input type="text" class="form-control form-control-sm" name="customer_address" id="customer_address" value="<?php if(isset($customer_info)){ echo $customer_info['customer_address']; } ?>" required>
                       </div>
-
-                      <div class="form-group col-md-6">
+                      <div class="form-group col-md-6 select_sm">
+                        <label>Country*</label>
+                        <select class="form-control select2 form-control-sm" name="country_id" id="country_id" data-placeholder="Select Country" required>
+                          <option value="">Select Country</option>
+                          <?php if(isset($country_list)){ foreach ($country_list as $list) { ?>
+                          <option value="<?php echo $list->country_id; ?>" <?php if(isset($customer_info) && $customer_info['country_id'] == $list->country_id){ echo 'selected'; } ?>><?php echo $list->country_name; ?></option>
+                          <?php } } ?>
+                        </select>
+                      </div>
+                      <div class="form-group col-md-6 select_sm">
+                        <label>State*</label>
+                        <select class="form-control select2 form-control-sm" name="state_id" id="state_id" data-placeholder="Select State" required>
+                          <option value="">Select State</option>
+                          <?php if(isset($state_list)){ foreach ($state_list as $list) { ?>
+                          <option value="<?php echo $list->state_id; ?>" <?php if(isset($customer_info) && $customer_info['state_id'] == $list->state_id){ echo 'selected'; } ?>><?php echo $list->state_name; ?></option>
+                          <?php } } ?>
+                        </select>
+                      </div>
+                      <div class="form-group col-md-6 select_sm">
                         <label>City*</label>
-                        <input type="text" class="form-control form-control-sm" name="customer_city" id="customer_city" value="<?php if(isset($customer_info)){ echo $customer_info['customer_city']; } ?>" required>
+                        <select class="form-control select2 form-control-sm" name="city_id" id="city_id" data-placeholder="Select City" required>
+                          <option value="">Select City</option>
+                          <?php if(isset($city_list)){ foreach ($city_list as $list) { ?>
+                          <option value="<?php echo $list->city_id; ?>" <?php if(isset($customer_info) && $customer_info['city_id'] == $list->city_id){ echo 'selected'; } ?>><?php echo $list->city_name; ?></option>
+                          <?php } } ?>
+                        </select>
                       </div>
                       <div class="form-group col-md-6">
                         <label>Pin Code*</label>
                         <input type="number" min="100000" max="999999" class="form-control form-control-sm" name="customer_pin" id="customer_pin" value="<?php if(isset($customer_info)){ echo $customer_info['customer_pin']; } ?>" required>
                       </div>
                       <div class="form-group col-md-6">
-                        <label>Loyalty Number*</label>
+                        <label>Loyalty Number</label>
                         <input type="number" class="form-control form-control-sm" name="customer_loyalty_no" id="customer_loyalty_no" value="<?php if(isset($customer_info)){ echo $customer_info['customer_loyalty_no']; } ?>" >
                       </div>
                       <div class="form-group col-md-6">
-                        <label>Credit Limit (Amount)*</label>
-                        <input type="number" class="form-control form-control-sm" name="customer_credit_lim" id="customer_credit_lim" value="<?php if(isset($customer_info)){ echo $customer_info['customer_credit_lim']; } ?>" required>
+                        <label>Credit Limit (Amount)</label>
+                        <input type="number" class="form-control form-control-sm" name="customer_credit_lim" id="customer_credit_lim" value="<?php if(isset($customer_info)){ echo $customer_info['customer_credit_lim']; } ?>">
                       </div>
                       <div class="form-group col-md-6">
                         <label>Password*</label>
@@ -101,8 +123,6 @@
                         <label>Confirm Password*</label>
                         <input type="password" class="form-control form-control-sm" id="customer_con_password" value="<?php if(isset($customer_info)){ echo $customer_info['customer_password']; } ?>" required>
                       </div>
-
-
                       <div class="form-group col-md-6 select_sm" >
                         <label>Payment Type*</label>
                         <select class="form-control select2" name="payment_type_id" id="payment_type_id" data-placeholder="Select Payment Type" <?php if(isset($update)){ echo 'disabled'; } ?> required>
@@ -115,6 +135,20 @@
                       <div class="form-group col-md-6">
                         <label>Payment Reference Number*</label>
                         <input type="text" class="form-control form-control-sm" name="peyment_ref_no" id="peyment_ref_no" value="<?php //if(isset($customer_info)){ echo $customer_info['peyment_ref_no']; } ?>" <?php if(isset($update)){ echo 'disabled'; }?>>
+                      </div>
+
+                      <div class="form-group col-md-6 select_sm">
+                        <label>Ration Card Type</label>
+                        <select class="form-control select2" name="customer_ration_type" id="customer_ration_type" data-placeholder="Select Card Type">
+                          <option value="">Select Card Type</option>
+                          <option value="Yellow" <?php if(isset($customer_info) && $customer_info['customer_ration_type'] == 'Yellow'){ echo 'selected'; } ?>>Yellow</option>
+                          <option value="Orange" <?php if(isset($customer_info) && $customer_info['customer_ration_type'] == 'Orange'){ echo 'selected'; } ?>>Orange</option>
+                          <option value="White" <?php if(isset($customer_info) && $customer_info['customer_ration_type'] == 'White'){ echo 'selected'; } ?>>White</option>
+                        </select>
+                      </div>
+                      <div class="form-group col-md-12">
+                        <label>Family Members Information</label>
+                        <textarea class="form-control form-control-sm" name="customer_family_info" id="customer_family_info" rows="3"><?php if(isset($customer_info)){ echo $customer_info['customer_family_info']; } ?></textarea>
                       </div>
                     </div>
                   </div>
@@ -132,7 +166,7 @@
                     <?php } else{ ?>
                       <button id="btn_save" type="submit" class="btn btn-success px-4">Save</button>
                     <?php } ?>
-                    <a href="<?php echo base_url() ?>User/supplier_list" class="btn btn-default ml-4">Cancel</a>
+                    <a href="" class="btn btn-default ml-4">Cancel</a>
                   </div>
                 </div>
               </form>

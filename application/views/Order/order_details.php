@@ -47,13 +47,18 @@
                         </div>
                         <div class="col-md-6">
                           <label>Name : </label> <?php if(isset($order_info)){ echo $order_info['order_cust_fname']; } ?> <?php if(isset($order_info)){ echo $order_info['order_cust_lname']; } ?>
-                        </div>                        
+                        </div>
                         <div class="col-md-12">
                           <label>Address : </label> <?php if(isset($order_info)){ echo $order_info['order_cust_addr']; } ?>
                         </div>
+
+
                         <div class="col-md-6">
-                          <label>City : </label> <?php if(isset($order_info)){ echo $order_info['order_cust_city']; } ?>
+                          <?php $city_id = $order_info['city_id'];
+                            $city_info = $this->User_Model->get_info_arr_fields('district_name as city_name','district_id', $city_id, 'district'); ?>
+                          <label>City : </label> <?php if(isset($order_info)  && $city_info){ echo $city_info[0]['city_name']; } ?>
                         </div>
+
                         <div class="col-md-6">
                           <label>Pin Code : </label> <?php if(isset($order_info)){ echo $order_info['order_cust_pin']; } ?>
                         </div>

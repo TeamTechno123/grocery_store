@@ -136,80 +136,28 @@
                         <input type="hidden" name="old_img" value="<?php echo $product_info['product_img']; ?>">
                       </div>
                       <?php } ?>
+
+                      <div id="product_area_div" class="form-group col-md-12 select_sm ">
+                        <label>Select Product Area</label>
+                        <select class="form-control select2 form-control-sm" multiple name="product_area[]" id="product_area"  data-placeholder="Select Area">
+                          <option value="">Select Area</option>
+                          <?php if(isset($area_list)){ foreach ($area_list as $list) { ?>
+                          <option value="<?php echo $list->tahsil_id; ?>"
+                            <?php if(isset($product_info)){
+                              $product_area_list = explode(',', $product_info['product_area']);
+                              foreach ($product_area_list as $area_id) {
+                                if($area_id == $list->tahsil_id){ echo 'selected'; }
+                              }
+                            } ?>
+                            ><?php echo $list->tahsil_name; ?></option>
+                          <?php } } ?>
+                        </select>
+                      </div>
                     </div>
                   </div>
                 <div class="col-md-12">
                   <hr>
                 </div>
-
-              <!-- <div class="col-md-5 offset-md-1 px-4">
-                <div class="row">
-                  <div class="form-group col-md-12 select_sm">
-                    <label>Flash Sale</label>
-                    <select class="form-control select2 form-control-sm" name="flash_sale" id="flash_sale" data-placeholder="Flash Sale">
-                      <option <?php if(isset($product_info) && $product_info['flash_sale'] == 'No'){ echo 'selected'; } ?>>No</option>
-                      <option <?php if(isset($product_info) && $product_info['flash_sale'] == 'Yes'){ echo 'selected'; } ?>>Yes</option>
-                    </select>
-                  </div>
-
-                  <div class="form-group col-md-12 div_flash_sale">
-                    <label>Flash Sale Price</label>
-                    <input type="number" class="form-control form-control-sm" name="flash_sale_price" id="flash_sale_price" value="<?php if(isset($product_info) && $product_info['flash_sale_price'] != 0){ echo $product_info['flash_sale_price']; } ?>" placeholder="" >
-                  </div>
-                  <div class="form-group col-md-6 div_flash_sale">
-                    <label>Flash Sale Start Date*</label>
-                    <input type="text" class="form-control form-control-sm" name="flash_sale_start_date" id="date1" data-target="#date1" data-toggle="datetimepicker" value="<?php if(isset($product_info)){ echo $product_info['flash_sale_start_date']; } ?>" placeholder="" >
-                  </div>
-                  <div class="form-group col-md-6 div_flash_sale">
-                      <label>time</label>
-                    <input type="text" class="form-control form-control-sm" name="flash_sale_start_time" id="timepicker1" data-target="#timepicker1" data-toggle="datetimepicker" value="<?php if(isset($product_info)){ echo $product_info['flash_sale_start_time']; } ?>" placeholder="" >
-                  </div>
-                  <div class="form-group col-md-6 div_flash_sale">
-                    <label>Flash Sale End Date*</label>
-                    <input type="text" class="form-control form-control-sm" name="flash_sale_end_date" id="date2" data-target="#date2" data-toggle="datetimepicker" value="<?php if(isset($product_info)){ echo $product_info['flash_sale_end_date']; } ?>" placeholder="" >
-                  </div>
-                  <div class="form-group col-md-6 div_flash_sale">
-                    <label>time</label>
-                    <input type="text" class="form-control form-control-sm" name="flash_sale_end_time" id="timepicker2" data-target="#timepicker2" data-toggle="datetimepicker" value="<?php if(isset($product_info)){ echo $product_info['flash_sale_end_time']; } ?>" placeholder="" >
-                  </div>
-                  <div class="form-group col-md-6 select_sm div_flash_sale">
-                    <label>Status</label>
-                    <select class="form-control select2 form-control-sm" name="flash_sale_status" id="flash_sale_status" data-placeholder="Status">
-                      <option value="1" <?php if(isset($product_info) && $product_info['flash_sale_status'] == '1'){ echo 'selected'; } ?>>Active</option>
-                      <option value="0" <?php if(isset($product_info) && $product_info['flash_sale_status'] == '0'){ echo 'selected'; } ?>>Inactive</option>
-                    </select>
-                  </div>
-
-                </div>
-              </div>
-
-              <div class="col-md-5 px-4">
-                <div class="row">
-                  <div class="form-group col-md-12 select_sm">
-                    <label>Special</label>
-                    <select class="form-control select2 select_sm" name="pro_special" id="pro_special" data-placeholder="Special">
-                      <option <?php if(isset($product_info) && $product_info['pro_special'] == 'No'){ echo 'selected'; } ?>>No</option>
-                      <option <?php if(isset($product_info) && $product_info['pro_special'] == 'Yes'){ echo 'selected'; } ?>>Yes</option>
-                    </select>
-                  </div>
-                  <div class="form-group col-md-12 div_pro_special">
-                    <label>Special Price*</label>
-                    <input type="number" class="form-control form-control-sm" name="pro_special_price" id="pro_special_price" value="<?php if(isset($product_info) && $product_info['pro_special_price'] != 0 ){ echo $product_info['pro_special_price']; } ?>" placeholder="" >
-                  </div>
-                  <div class="form-group col-md-12 div_pro_special">
-                    <label>Expiry Date*</label>
-                    <input type="text" class="form-control form-control-sm" name="pro_special_exp_date" id="date3" data-target="#date3" data-toggle="datetimepicker" value="<?php if(isset($product_info)){ echo $product_info['pro_special_exp_date']; } ?>" placeholder="" >
-                  </div>
-                  <div class="form-group col-md-6 div_pro_special">
-                    <label>Status</label>
-                    <select class="form-control form-control-sm" name="pro_special_status" id="pro_special_status" data-placeholder="Status">
-                      <option value="1" <?php if(isset($product_info) && $product_info['pro_special_status'] == '1'){ echo 'selected'; } ?>>Active</option>
-                      <option value="0" <?php if(isset($product_info) && $product_info['pro_special_status'] == '0'){ echo 'selected'; } ?>>Inactive</option>
-                    </select>
-                  </div>
-                </div>
-              </div> -->
-
               <!-- <div class="col-md-12">
                 <hr>
               </div> -->
@@ -366,7 +314,7 @@
                     <?php } else{ ?>
                       <button id="btn_save" type="submit" class="btn btn-success px-4">Save</button>
                     <?php } ?>
-                    <a href="<?php echo base_url() ?>User/manufacturer_list" class="btn btn-default ml-4">Cancel</a>
+                    <a href="" class="btn btn-default ml-4">Cancel</a>
                   </div>
                 </div>
               </form>
@@ -380,62 +328,28 @@
   <script src="<?php echo base_url(); ?>assets/plugins/toastr/toastr.min.js"></script>
 
   <script type="text/javascript">
-
     $(document).ready(function(){
-      var flash_sale =  $('#flash_sale').find("option:selected").val();
-      if(flash_sale == 'Yes'){
-        $('.div_flash_sale').css('display','block');
-        flash_sale_required();
-      } else{
-        $('.div_flash_sale').css('display','none');
-        flash_sale_not_required();
-      }
-      var pro_special =  $('#pro_special').find("option:selected").val();
-      if(pro_special == 'Yes'){
-        $('.div_pro_special').css('display','block');
-        pro_special_required()
-      } else{
-        $('.div_pro_special').css('display','none');
-        pro_special_not_required()
-      }
+      var is_feature = $('#is_feature').val();
+      select_feature_area(is_feature);
     });
-
-    $('#flash_sale').change(function(){
-      var flash_sale = $(this).val();
-      if(flash_sale == 'Yes'){
-        $('.div_flash_sale').css('display','block');
-        flash_sale_required();
-      } else{
-        $('.div_flash_sale').css('display','none');
-        flash_sale_not_required();
-      }
+    $(document).on('change', '#is_feature', function(){
+      var is_feature = $(this).val();
+      select_feature_area(is_feature);
+      // alert(is_feature);
     });
-
-    $('#pro_special').change(function(){
-      var pro_special = $(this).val();
-      if(pro_special == 'Yes'){
-        $('.div_pro_special').css('display','block');
-        pro_special_required()
+    function select_feature_area(is_feature){
+      if(is_feature == 1){
+        $('#product_area').attr('disabled',false);
+        $('#product_area_div').removeClass('d-none');
       } else{
-        $('.div_pro_special').css('display','none');
-        pro_special_not_required()
+        $('#product_area').attr('disabled',true);
+        $('#product_area_div').addClass('d-none');
       }
-    });
-
-    function flash_sale_required(){
-      $('#flash_sale_price, #date1, #timepicker1, #date2, #timepicker2').attr('required', true);
-    }
-    function flash_sale_not_required(){
-      $('#flash_sale_price, #date1, #timepicker1, #date2, #timepicker2').attr('required', false);
     }
 
-    function pro_special_required(){
-      $('#pro_special_price, #date3').attr('required', true);
-    }
-    function pro_special_not_required(){
-      $('#pro_special_price, #date3').attr('required', false);
-    }
   </script>
+
+
 
   <script type="text/javascript">
     // Add Row...
@@ -480,7 +394,6 @@
     $('#myTable').on('click', '.rem_row', function () {
       $(this).closest('tr').remove();
     });
-
   </script>
 </body>
 </html>

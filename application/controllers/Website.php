@@ -12,14 +12,21 @@ class Website extends CI_Controller{
   }
 
   public function index(){
-    $header_content_id = 1;
-    $header_content_info = $this->User_Model->get_info_arr('header_content_id',$header_content_id,'header_content');
-    $data['header_content_info'] = $header_content_info[0];
     $data['slider_list'] = $this->User_Model->get_list_by_id('slider_status',1,'','','','','slider');
 
     $data['main_category_list'] = $this->Website_Model->category_home_list();
     $data['brand_list'] = $this->Website_Model->brand_home_list();
-    $data['featured_product_list'] = $this->Website_Model->featured_product_list();
+
+    $eco_cust_id = $this->session->userdata('eco_cust_id');
+    $area_id = '';
+    if(isset($eco_cust_id)){
+      $customer_info = $this->User_Model->get_info_arr_fields('customer_pin','customer_id', $eco_cust_id, 'customer');
+      $area_details = $this->User_Model->get_info_arr_fields('tahsil_id','tahsil_pincode_no', $customer_info[0]['customer_pin'], 'tahsil_pincode');
+      if($area_details){ $area_id = $area_details[0]['tahsil_id']; }
+      $data['featured_product_list'] = $this->Website_Model->featured_product_list($area_id);
+    } else{
+      $data['featured_product_list'] = $this->Website_Model->featured_product_list($area_id);
+    }
     // $data['main_category_list'] = $this->User_Model->get_list_by_id('is_main',1,'category_status',1,'category_id','ASC','category');
     // print_r()
     $this->load->view('Website/index',$data);
@@ -65,9 +72,9 @@ class Website extends CI_Controller{
   }
 
   public function search_result(){
-    $eco_cust_id = $this->session->userdata('eco_cust_id');
-    $eco_cust_login = $this->session->userdata('eco_cust_login');
-    if($eco_cust_id == '' || $eco_cust_login == ''){ header('location:'.base_url().'Login'); }
+    // $eco_cust_id = $this->session->userdata('eco_cust_id');
+    // $eco_cust_login = $this->session->userdata('eco_cust_login');
+    // if($eco_cust_id == '' || $eco_cust_login == ''){ header('location:'.base_url().'Login'); }
 
     $search_keyword = $this->input->post('search_keyword');
     $this->session->set_userdata('search_keyword',$search_keyword);
@@ -77,9 +84,9 @@ class Website extends CI_Controller{
   }
 
   public function search_result2(){
-    $eco_cust_id = $this->session->userdata('eco_cust_id');
-    $eco_cust_login = $this->session->userdata('eco_cust_login');
-    if($eco_cust_id == '' || $eco_cust_login == ''){ header('location:'.base_url().'Login'); }
+    // $eco_cust_id = $this->session->userdata('eco_cust_id');
+    // $eco_cust_login = $this->session->userdata('eco_cust_login');
+    // if($eco_cust_id == '' || $eco_cust_login == ''){ header('location:'.base_url().'Login'); }
     $search_keyword = $this->session->userdata('search_keyword');
     if($search_keyword == ''){ header('location:'.base_url().''); }
 
@@ -99,11 +106,17 @@ class Website extends CI_Controller{
     $category_id = $this->uri->segment(2);
     // echo $category_id;
     $data['product_list'] = $this->Website_Model->product_list_by_category($category_id);
-    $data['brand_list'] = $this->Website_Model->brand_home_list();
+    $category_details = $this->User_Model->get_info_arr_fields('main_category_id,category_name,category_img,is_main','category_id', $category_id, 'category');
+    if(!$category_details){ header('location:'.base_url()); }
+    if($category_details[0]['is_main'] == '1'){
+      $main_category_id = $category_id;
+    } else{
+      $main_category_id = $category_details[0]['main_category_id'];
+    }
+    $data['brand_list'] = $this->Website_Model->get_brand_category($main_category_id);
+    $data['sub_category_list'] = $this->User_Model->get_list_by_id('main_category_id',$main_category_id,'category_status',1,'category_name','ASC','category');
     $data['main_category_list'] = $this->User_Model->get_list_by_id('','','is_main',1,'category_name','ASC','category');
-    $data['sub_category_list'] = $this->User_Model->get_list_by_id('main_category_id',$category_id,'category_status',1,'category_name','ASC','category');
-    $category_details = $this->User_Model->get_info_arr_fields('category_name,category_img','category_id', $category_id, 'category');
-    $data['category_id'] = $category_id;
+    $data['category_id'] = $main_category_id;
     $data['category_details'] = $category_details[0];
     $product_cnt = 0;
     foreach ($data['product_list'] as $product_list_cnt) {  $product_cnt++; }
@@ -115,13 +128,23 @@ class Website extends CI_Controller{
   public function grocery_list_by_brand_category(){
     $manufacturer_id = $this->uri->segment(2);
     $category_id = $this->uri->segment(3);
+
+    $category_details = $this->User_Model->get_info_arr_fields('main_category_id,category_name,category_img,is_main','category_id', $category_id, 'category');
+    if(!$category_details){ header('location:'.base_url()); }
+    if($category_details[0]['is_main'] == '1'){
+      $main_category_id = $category_id;
+    } else{
+      $main_category_id = $category_details[0]['main_category_id'];
+    }
+    $data['brand_list'] = $this->Website_Model->get_brand_category($main_category_id);
+    $data['sub_category_list'] = $this->User_Model->get_list_by_id('main_category_id',$main_category_id,'category_status',1,'category_name','ASC','category');
+
+
     $data['product_list'] = $this->Website_Model->grocery_list_by_brand_category($manufacturer_id,$category_id);
-    $data['brand_list'] = $this->Website_Model->get_brand_category($category_id);
     $data['main_category_list'] = $this->User_Model->get_list_by_id('','','is_main',1,'category_name','ASC','category');
-    $data['sub_category_list'] = $this->User_Model->get_list_by_id('main_category_id',$category_id,'category_status',1,'category_name','ASC','category');
 
     $manufacturer_details = $this->User_Model->get_info_arr_fields('manufacturer_name,manufacturer_info','manufacturer_id', $manufacturer_id, 'manufacturer');
-    $data['category_id'] = $category_id;
+    $data['category_id'] = $main_category_id;
     $data['manufacturer_id'] = $manufacturer_id; // Brand Id
     $data['brand_details'] = $manufacturer_details[0];
     $product_cnt = 0;
@@ -141,9 +164,7 @@ class Website extends CI_Controller{
     // $category_id = $this->uri->segment(3);
     $data['product_list'] = $this->Website_Model->grocery_list_by_brand($manufacturer_id);
 
-    $data['brand_list'] = $this->Website_Model->get_brand_category($category_id);
     $data['main_category_list'] = $this->User_Model->get_list_by_id('','','is_main',1,'category_name','ASC','category');
-    $data['sub_category_list'] = $this->User_Model->get_list_by_id('main_category_id',$category_id,'category_status',1,'category_name','ASC','category');
     $manufacturer_details = $this->User_Model->get_info_arr_fields('manufacturer_name,manufacturer_info','manufacturer_id', $manufacturer_id, 'manufacturer');
     $data['category_id'] = '';
     $data['manufacturer_id'] = $manufacturer_id; // Brand Id
@@ -178,12 +199,14 @@ class Website extends CI_Controller{
     $category_id = $this->uri->segment(2);
     // echo $manufacturer_id;
     $data['brand_list'] = $this->Website_Model->get_brand_category($category_id);
+
     $data['main_category_list'] = $this->User_Model->get_list_by_id('','','is_main',1,'category_name','ASC','category');
     $data['sub_category_list'] = $this->User_Model->get_list_by_id('main_category_id',$category_id,'category_status',1,'category_name','ASC','category');
     $category_details = $this->User_Model->get_info_arr_fields('category_name,category_img','category_id', $category_id, 'category');
     $data['category_id'] = $category_id;
     $data['category_details'] = $category_details[0];
     $this->load->view('Website/brand_list_by_category', $data);
+
   }
 
   public function cart(){
@@ -196,7 +219,7 @@ class Website extends CI_Controller{
     // $eco_cust_info = $this->User_Model->get_info_arr('customer_id',$eco_cust_id,'customer');
     // $data['eco_cust_info'] = $eco_cust_info[0];
     $point_add_cnt = $this->User_Model->get_sum('','point_add_cnt','customer_id',$eco_cust_id,'','','point_add');
-    $point_use_cnt = $this->User_Model->get_sum('','point_use_cnt','customer_id',$eco_cust_id,'','','point_use');
+    $point_use_cnt = $this->User_Model->get_sum('','point_use_cnt','customer_id',$eco_cust_id,'point_use_status','1','point_use');
 
     $wallet_bal_point = $point_add_cnt - $point_use_cnt;
     $data['wallet_bal_point'] = $wallet_bal_point;
@@ -214,11 +237,14 @@ class Website extends CI_Controller{
     $data['page_name'] = "Checkout";
 
     $point_add_cnt = $this->User_Model->get_sum('','point_add_cnt','customer_id',$eco_cust_id,'','','point_add');
-    $point_use_cnt = $this->User_Model->get_sum('','point_use_cnt','customer_id',$eco_cust_id,'','','point_use');
+    $point_use_cnt = $this->User_Model->get_sum('','point_use_cnt','customer_id',$eco_cust_id,'point_use_status','1','point_use');
 
     $wallet_bal_point = $point_add_cnt - $point_use_cnt;
     $data['wallet_bal_point'] = $wallet_bal_point;
 
+    $data['country_list'] = $this->User_Model->get_list2('country_name','ASC','country');
+    $data['state_list'] = $this->User_Model->get_list_by_id2('state_id, country_id, state_name','','','state');
+    $data['city_list'] = $this->User_Model->get_list_by_id2('district_id as city_id , state_id, district_name as city_name','','','district');
     $this->load->view('Website/checkout', $data);
   }
 
@@ -366,15 +392,12 @@ class Website extends CI_Controller{
     if ($this->form_validation->run() != FALSE) {
       $otp = mt_rand(100000, 999999);
 
-      $customer_ref_by = $this->input->post('customer_ref_by');
-      $customer_ref_by = str_replace("KBC-000", "", $customer_ref_by);
       $save_data = array(
         'customer_fname' => $this->input->post('customer_fname'),
         'customer_lname' => $this->input->post('customer_lname'),
         'customer_mobile' => $this->input->post('customer_mobile'),
         'customer_email' => $this->input->post('customer_email'),
         'customer_password' => $this->input->post('customer_password'),
-        'customer_ref_by' => $customer_ref_by,
         'otp' => $otp,
       );
 
@@ -493,6 +516,7 @@ class Website extends CI_Controller{
     $eco_cust_id = $this->session->userdata('eco_cust_id');
     $eco_cust_login = $this->session->userdata('eco_cust_login');
     if($eco_cust_id == '' || $eco_cust_login == ''){ header('location:'.base_url().'Login'); }
+
     $this->form_validation->set_rules('customer_address', 'Address', 'trim|required');
     if ($this->form_validation->run() != FALSE) {
       $update_data = $_POST;
@@ -501,7 +525,15 @@ class Website extends CI_Controller{
       $this->session->set_flashdata('update_success','success');
       header('location:'.base_url().'Profile');
     }
-    $this->load->view('Website/edit_address');
+
+    $eco_cust_info = $this->User_Model->get_info_arr('customer_id',$eco_cust_id,'customer');
+    $country_id = $eco_cust_info[0]['country_id'];
+    $state_id = $eco_cust_info[0]['state_id'];
+    $city_id = $eco_cust_info[0]['city_id'];
+    $data['country_list'] = $this->User_Model->get_list2('country_name','ASC','country');
+    $data['state_list'] = $this->User_Model->get_list_by_id2('state_id, country_id, state_name','','','state');
+    $data['city_list'] = $this->User_Model->get_list_by_id2('district_id as city_id , state_id, district_name as city_name','','','district');
+    $this->load->view('Website/edit_address', $data);
   }
 
 
@@ -515,6 +547,28 @@ class Website extends CI_Controller{
     if($eco_cust_id == '' || $eco_cust_login == ''){ header('location:'.base_url().'Login'); }
     $data['order_list'] = $this->User_Model->get_list_by_id('customer_id',$eco_cust_id,'','','order_id','DESC','order_tbl');
     $this->load->view('Website/order', $data);
+  }
+
+  public function cancel_order($order_id){
+    $eco_cust_id = $this->session->userdata('eco_cust_id');
+    $eco_cust_login = $this->session->userdata('eco_cust_login');
+    if($eco_cust_id == '' || $eco_cust_login == ''){ header('location:'.base_url().'Login'); }
+    $order_details = $this->User_Model->get_info_arr2_fields('order_status, order_no, order_date', 'order_id', $order_id, 'customer_id', $eco_cust_id, '', '', 'order_tbl');
+    if($order_details){
+      if($order_details[0]['order_status'] < 6){
+        $update_payment_status_data['payment_status'] = 2;
+        $this->User_Model->update_info('order_id', $order_id, 'order_tbl', $update_payment_status_data);
+        // Dissable Point Use...
+        $update_point_use_data['point_use_status'] = 0;
+        $this->User_Model->update_info('order_id', $order_id, 'point_use', $update_point_use_data);
+        // Dissable Coupon Used...
+        $update_coupon_used_data['coupon_used_status'] = 0;
+        $this->User_Model->update_info('order_id', $order_id, 'coupon_used', $update_coupon_used_data);
+      }
+    }
+
+    $this->session->set_flashdata('cancel_success','success');
+    header('location:'.base_url().'My-Orders');
   }
 
   // Order Details....
@@ -674,7 +728,7 @@ class Website extends CI_Controller{
     if($eco_cust_id == '' || $eco_cust_login == ''){ header('location:'.base_url().'Login'); }
 
     $point_add_cnt = $this->User_Model->get_sum('','point_add_cnt','customer_id',$eco_cust_id,'','','point_add');
-    $point_use_cnt = $this->User_Model->get_sum('','point_use_cnt','customer_id',$eco_cust_id,'','','point_use');
+    $point_use_cnt = $this->User_Model->get_sum('','point_use_cnt','customer_id',$eco_cust_id,'point_use_status','1','point_use');
 
     $wallet_bal_point = $point_add_cnt - $point_use_cnt;
     $data['wallet_bal_point'] = $wallet_bal_point;

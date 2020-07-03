@@ -82,10 +82,10 @@
 
     var product_qty = parseInt(product_qty);
 
-    if(product_qty > max_ord_limit){
+    if(max_ord_limit > 0 && product_qty > max_ord_limit){
       toastr.error('Invalid Product Quantity');
     }
-    else if (product_qty < min_ord_limit){
+    else if (min_ord_limit > 0 && product_qty < min_ord_limit){
       toastr.error('Invalid Product Quantity');
     } else{
       // var base_url = window.location.origin;

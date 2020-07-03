@@ -10,7 +10,6 @@
   </div>
 </section>
 
-
 <section class="checkout-middle">
 <div class="container">
   <form class="" action="<?php echo base_url(); ?>Cart/checkout_pay_calculation" method="post">
@@ -25,29 +24,23 @@
         <div class="row">
           <div class="col-md-6">
             <div class="form-group">
-              <label for="checkout-fn">First Name</label>
+              <label for="checkout-fn">First Name*</label>
               <input class="form-control form-control-sm" name="customer_fname" type="text" value="<?php if(isset($eco_cust_info)){ echo $eco_cust_info['customer_fname']; } ?>">
             </div>
           </div>
           <div class="col-md-6">
             <div class="form-group">
-              <label for="checkout-fn">Last Name</label>
+              <label for="checkout-fn">Last Name*</label>
               <input class="form-control form-control-sm" name="customer_lname" type="text" value="<?php if(isset($eco_cust_info)){ echo $eco_cust_info['customer_lname']; } ?>">
             </div>
           </div>
         </div>
 
         <div class="row">
-          <div class="col-md-6">
+          <div class="col-md-12">
             <div class="form-group">
-              <label for="checkout-fn">Address</label>
-              <input class="form-control form-control-sm" name="customer_address" type="text" value="<?php if(isset($eco_cust_info)){ echo $eco_cust_info['customer_address']; } ?>" required>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="form-group">
-              <label for="checkout-fn">City</label>
-              <input class="form-control form-control-sm" name="customer_city" type="text" value="<?php if(isset($eco_cust_info)){ echo $eco_cust_info['customer_city']; } ?>" required>
+              <label for="checkout-fn">Address*</label>
+              <textarea name="customer_address" id="customer_address" class="form-control" rows="3" required><?php echo $eco_cust_info['customer_address']; ?></textarea>
             </div>
           </div>
         </div>
@@ -55,18 +48,55 @@
         <div class="row">
           <div class="col-md-6">
             <div class="form-group">
-              <label for="checkout-fn">Pin/Zip No.</label>
-              <input class="form-control form-control-sm" name="customer_pin" type="number" value="<?php if(isset($eco_cust_info)){ echo $eco_cust_info['customer_pin']; } ?>" required>
+              <label for="checkout-fn">Country*</label>
+              <select class="form-control select2 form-control-sm" name="country_id" id="country_id" data-placeholder="Select Country" required>
+                <option value="">Select Country</option>
+                <?php if(isset($country_list)){ foreach ($country_list as $list) { ?>
+                <option value="<?php echo $list->country_id; ?>" <?php if(isset($eco_cust_info) && $eco_cust_info['country_id'] == $list->country_id){ echo 'selected'; } ?>><?php echo $list->country_name; ?></option>
+                <?php } } ?>
+              </select>
             </div>
           </div>
           <div class="col-md-6">
             <div class="form-group">
-              <label for="checkout-fn">Mobile Number *</label>
-              <input class="form-control form-control-sm" name="customer_mobile" type="number" value="<?php if(isset($eco_cust_info)){ echo $eco_cust_info['customer_mobile']; } ?>" required>
+              <label for="checkout-fn">State*</label>
+              <select class="form-control select2 form-control-sm" name="state_id" id="state_id" data-placeholder="Select State" required>
+                <option value="">Select State</option>
+                <?php if(isset($state_list)){ foreach ($state_list as $list) { ?>
+                <option value="<?php echo $list->state_id; ?>" <?php if(isset($eco_cust_info) && $eco_cust_info['state_id'] == $list->state_id){ echo 'selected'; } ?>><?php echo $list->state_name; ?></option>
+                <?php } } ?>
+              </select>
             </div>
           </div>
         </div>
+
         <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="checkout-fn">City*</label>
+              <select class="form-control select2 form-control-sm" name="city_id" id="city_id" data-placeholder="Select City" required>
+                <option value="">Select City</option>
+                <?php if(isset($city_list)){ foreach ($city_list as $list) { ?>
+                <option value="<?php echo $list->city_id; ?>" <?php if(isset($eco_cust_info) && $eco_cust_info['city_id'] == $list->city_id){ echo 'selected'; } ?>><?php echo $list->city_name; ?></option>
+                <?php } } ?>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="checkout-fn">Pin/Zip No.*</label>
+              <input class="form-control form-control-sm" id="customer_pin" name="customer_pin" type="number" value="<?php if(isset($eco_cust_info)){ echo $eco_cust_info['customer_pin']; } ?>" required>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="checkout-fn">Mobile Number*</label>
+              <input class="form-control form-control-sm" name="customer_mobile" type="number" value="<?php if(isset($eco_cust_info)){ echo $eco_cust_info['customer_mobile']; } ?>" required>
+            </div>
+          </div>
           <div class="col-md-6">
             <div class="form-group">
               <label for="checkout-fn">Email</label>
@@ -74,6 +104,14 @@
             </div>
           </div>
         </div>
+        <!-- <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="checkout-fn">Email</label>
+              <input class="form-control form-control-sm" name="customer_email" type="email" value="<?php if(isset($eco_cust_info)){ echo $eco_cust_info['customer_email']; } ?>">
+            </div>
+          </div>
+        </div> -->
       </div>
     </div>
 

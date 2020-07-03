@@ -5,6 +5,9 @@
   if(isset($eco_cust_id)){
     $eco_cust_info = $this->User_Model->get_info_arr('customer_id',$eco_cust_id,'customer');
     $eco_cust_info = $eco_cust_info[0];
+    $city_info = $this->User_Model->get_info_arr('district_id',$eco_cust_info['city_id'],'district');
+    if($city_info){ $city_name = $city_info[0]['district_name']; }
+    else{ $city_name = 'Not Available'; }
   }
   /*****************************header Dropdown ***************************************/
   $main_category_list2 = $this->User_Model->get_list_by_id('','','is_main',1,'category_name','ASC','category');
@@ -53,20 +56,68 @@
 
 <body>
 
-  <section class="top-header d-none d-sm-block">
+  <section class="top-header d-none d-sm-block pb-0">
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-6">
-        <p class="mb-0 f-16 ml-3"><i class="fas fa-map-marker-alt mr-2"></i> New Delhi  <i class="fas fa-edit ml-2"></i></p>
+          <?php if(isset($eco_cust_id)){   ?>
+            <p class="mb-0 f-16 ml-3">
+              <span class="f-12"><i class="fas fa-map-marker-alt mr-2"></i> <?php echo $city_name; ?></span>
+              <span class="bl-1 pl-2"><a href="#" class="f-12" data-toggle="modal" data-target="#check_pin"> <i class="fas fa-edit bg-sucess f-12"></i> Check Pincode</a></span>
+              <!--  -->
+            </p>
+          <?php } ?>
         </div>
         <div class="col-md-6 text-center">
-          <p class="mb-0 f-16 ml-3">  <i class="far fa-user mr-2"></i> Customer Service <span class="bl-1"> <a href="<?php echo base_url(); ?>Offers"> <i class="fas fa-map-marker-alt ml-3 mr-2"></i> Offers Zone </a></span> <span class="bl-1"> <a href="<?php echo base_url(); ?>Login">  <i class="far fa-user ml-3 mr-2"></i> Login / Sign Up </a></span> </p>
+          <!-- <p class="mb-0 f-16 ml-3"> -->
+          <div class="row">
+            <span class="col-md-3 offset-md-3"><p class="f-12"> <a href="<?php echo base_url(); ?>Contact-us"><i class="far fa-user mr-2"></i> Customer Service</a></p></span>
+            <span class="col-md-3"><p class="f-12"><a href="<?php echo base_url(); ?>Offers"> <i class="fas fa-map-marker-alt ml-3 mr-2"></i> Offers Zone </a></p></span>
+            <span class="col-md-3">
+              <?php if(isset($eco_cust_id)){ ?>
+                <div class="btn-group">
+                  <button class="btn btn-secondary btn-sm btn-kb  dropdown-toggle f-12" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="far fa-user"></i> <?php echo $eco_cust_info['customer_fname'].' '.$eco_cust_info['customer_lname']; ?>
+                  </button>
+                  <div class="dropdown-menu dropdown-menu-right bg-green p-0">
+                    <ul class="list-group">
+                      <li class="list-group-item py-1">
+                        <a href="<?php echo base_url(); ?>Profile">Profile</a>
+                      </li>
+                      <li class="list-group-item py-1">
+                        <a href="<?php echo base_url(); ?>My-Orders">My Orders</a>
+                      </li>
+                      <li class="list-group-item py-1">
+                        <a href="<?php echo base_url(); ?>My-Wallet">My Wallet</a>
+                      </li>
+                      <li class="list-group-item py-1">
+                        <a class="f-14" href="<?php echo base_url(); ?>My-Membership">My Membership</a>
+                      </li>
+                      <li class="list-group-item py-1">
+                        <a class="f-14" href="<?php echo base_url(); ?>My-Gift-Card">My Gift Card</a>
+                      </li>
+                      <li class="list-group-item py-1">
+                        <a href="<?php echo base_url(); ?>Website/logout">Logout</a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <!-- <a class="text-success text-bold" href="">  <i class="far fa-user ml-3 mr-2"></i> <?php echo $eco_cust_info['customer_fname'].' '.$eco_cust_info['customer_lname']; ?> </a> -->
+              <?php } else{ ?>
+                <p class="f-12"><a href="<?php echo base_url(); ?>Login">  <i class="far fa-user ml-3 mr-2"></i> Login / Sign Up </a></p>
+              <?php } ?>
+            </span>
+          </div>
+
+          <!-- </p> -->
         </div>
       </div>
     </div>
 </section>
 
-<section class="nav-header d-none d-sm-block">
+<!-- Desktop Header -->
+
+<section class="nav-header d-none d-sm-block pt-0 pb-1">
   <div class="container-fluid">
     <div class="row">
       <div class="col-md-3 text-center">
@@ -75,45 +126,55 @@
       <div class="col-md-9">
         <div class="row">
           <div class="col-10">
-            <div class="input-group mb-3">
-                <input type="text" class="form-control" placeholder="Product / Category " aria-label="Recipient's username" aria-describedby="basic-addon2">
+            <form action="<?php echo base_url(); ?>Website/search_result" method="post">
+              <div class="input-group mb-3">
+                <input type="text" name="search_keyword" id="search_keyword" class="form-control" placeholder="Search By Category / Brand / Product" aria-label="Search By Category / Brand / Product" aria-describedby="basic-addon2" required>
                 <div class="input-group-append">
-                  <button class="btn btn-outline-secondary" type="button"><i class="fas fa-search"></i></button>
+                  <button class="btn btn-outline-success" type="submit"><i class="fas fa-search"></i></button>
                 </div>
               </div>
+            </form>
           </div>
           <div class="col-2">
             <div class=" head-shopping-cart ml-2 mt-2">
-              <a href="#" data-toggle="modal" data-target="#myCart"><i class="fa m-f10 text-green fa-shopping-cart "><span class="badge badge-notify my-cart-badge">0</span></i></a>
+              <a href="#" class="text-success" data-toggle="modal" data-target="#myCart"><i class="fa m-f10 text-green fa-shopping-cart "><span class="badge badge-notify my-cart-badge">0</span></i></a>
             </div>
           </div>
         </div>
         <div class="row">
           <div class="col-6">
             <div class="dropdown">
-                  <button class="btn btn-warning dropdown-toggle w-100 text-left" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  Shop By Category
-                  </button>
-                  <div class="dropdown-menu p-4" aria-labelledby="dropdownMenuButton">
-                  <div class="row">
-                    <div class="col-md-4">
-                      <a class="dropdown-item" href="#">Action</a>
-                      <a class="dropdown-item" href="#">Another action</a>
-                      <a class="dropdown-item" href="#">Something else here</a>
-                    </div>
-                    <div class="col-md-4">
-                      <a class="dropdown-item" href="#">Action</a>
-                      <a class="dropdown-item" href="#">Another action</a>
-                      <a class="dropdown-item" href="#">Something else here</a>
-                    </div>
-
-                    <div class="col-md-4">
-                      <img class="header-logo" src="<?php echo base_url(); ?>assets/images/new/newlogo.png" width="100%" alt="">
-                    </div>
-                  </div>
-                  </div>
+              <button class="btn btn-warning dropdown-toggle w-100 text-left" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Shop By Category
+              </button>
+              <div class="dropdown-menu p-4" aria-labelledby="dropdownMenuButton">
+              <div class="row">
+                <div class="col-md-4">
+                  <?php
+                  $main_category_list = $this->User_Model->get_list_by_id('','','is_main',1,'category_name','ASC','category');
+                   $i = 2; foreach ($main_category_list as $main_category_list1) {
+                     $category_name = str_replace(' ', '-', $main_category_list1->category_name);
+                     $category_name =  preg_replace('/[^A-Za-z0-9\-]/', '-', $category_name);
+                     if($i % 2 == 0 ){ ?>
+                       <a class="dropdown-item" href="<?php echo base_url(); ?>Brand-List/<?php echo $main_category_list1->category_id; ?>/<?php echo $category_name; ?>"><?php echo $main_category_list1->category_name; ?></a>
+                  <?php }  $i++;  } ?>
                 </div>
-            <!-- <button type="button" class="btn btn-warning w-100 text-left">Shop By Category</button> -->
+                <div class="col-md-4">
+                  <?php
+                  $main_category_list = $this->User_Model->get_list_by_id('','','is_main',1,'category_name','ASC','category');
+                   $i = 2; foreach ($main_category_list as $main_category_list1) {
+                     $category_name = str_replace(' ', '-', $main_category_list1->category_name);
+                     $category_name =  preg_replace('/[^A-Za-z0-9\-]/', '-', $category_name);
+                     if($i % 2 == 1 ){ ?>
+                       <a class="dropdown-item" href="<?php echo base_url(); ?>Brand-List/<?php echo $main_category_list1->category_id; ?>/<?php echo $category_name; ?>"><?php echo $main_category_list1->category_name; ?></a>
+                  <?php }  $i++;  } ?>
+                </div>
+                <div class="col-md-4">
+                  <img class="header-logo" src="<?php echo base_url(); ?>assets/images/new/newlogo.png" width="100%" alt="">
+                </div>
+              </div>
+              </div>
+            </div>
           </div>
           <div class="col-6">
             <button type="button" class="btn btn-success w-100">Refer Your Friend</button>
@@ -126,7 +187,7 @@
 
 
 
-<!--***********************     Mobile Responsive   head  ************************-->
+<!--***********************     Mobile Responsive Header  ************************-->
 
 <section class="mobile-head d-block d-sm-none">
   <div class="container-fluid">
@@ -140,7 +201,7 @@
           </button>
         </div>
         <div class="col-6">
-          <a class="navbar-brand text-white text-center" href="<?php echo base_url(); ?>"> <span class="text-bold ">Needs</span> On Doors</a>
+          <a class="navbar-brand text-white text-center" href="<?php echo base_url(); ?>"> <span class="text-bold" style="color:#f30414;">Needs</span><span style="color:#007cd0;"> On Doors</span></a>
         </div>
         <div class="col-3 text-right">
             <?php if(isset($eco_cust_id)){ ?>
@@ -152,12 +213,12 @@
           <?php }  ?>
         </div>
 
-        <div class="col-11">
-          <form class="" action="index.html" method="post">
-            <div class="input-group input-group-sm mb-3 mt-3 ml-3">
-              <input type="text" class="form-control" id="inputGroup-sizing-sm" placeholder="Search By Category / Brand / Product" aria-label="Search By Category / Brand / Product" aria-describedby="basic-addon2" required>
+        <div class="col-12">
+          <form action="<?php echo base_url(); ?>Website/search_result" method="post">
+            <div class="input-group mb-3">
+              <input type="text" name="search_keyword" id="search_keyword2" class="form-control" placeholder="Search By Category / Brand / Product" aria-label="Search By Category / Brand / Product" aria-describedby="basic-addon2" required>
               <div class="input-group-append">
-                <button class="btn btn-outline-light" type="submit"><i class="fas fa-search"></i></button>
+                <button class="btn btn-outline-success" type="submit"><i class="fas fa-search"></i></button>
               </div>
             </div>
           </form>
@@ -212,6 +273,40 @@
       </nav>
   </div>
 </section>
+
+<!-- Pncode Modal -->
+<div class="modal fade" id="check_pin" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Check Pincode</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <!-- <div class="col-12">
+            <select class="form-control select2 mb-2" id="txt_tahsil" name="txt_tahsil" data-placeholder="Select Area">
+              <option value="">Select Area</option>
+              <?php
+              foreach ($tahsil_list as $tahsil_list1) { ?>
+                <option value="<?php echo $tahsil_list1->tahsil_id; ?>"><?php echo $tahsil_list1->tahsil_name; ?></option>
+              <?php } ?>
+            </select>
+          </div> -->
+          <div class="col-12">
+            <input type="number" id="txt_check_pin" name="txt_check_pin" class="form-control mb-2" placeholder="Enter Your Pincode">
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" id="btn_check_pincode" class="btn btn-primary" data-dismiss="modal">Check</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 
 <!-- Modal -->

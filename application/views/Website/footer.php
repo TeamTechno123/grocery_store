@@ -308,10 +308,11 @@ eval(function(p,a,c,k,e,r){e=function(c){return(c<a?'':e(parseInt(c/a)))+((c=c%a
         context: this,
         success: function(result){
           if(result == 0){
+            // alert('Delivery Not Available');
             $('#txt_check_pin').val('');
             toastr.error('Delivery Not Available');
-            // $('#customer_pin').focus();
           } else{
+            // alert('Delivery Available');
             $('#txt_check_pin').val('');
             toastr.success('Delivery Available');
           }
@@ -369,7 +370,7 @@ eval(function(p,a,c,k,e,r){e=function(c){return(c<a?'':e(parseInt(c/a)))+((c=c%a
                   items:3
               },
               1000:{
-                  items:5
+                  items:6
               }
           }
         })

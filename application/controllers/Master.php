@@ -112,8 +112,9 @@ class Master extends CI_Controller{
     $eco_company_id = $this->session->userdata('eco_company_id');
     $eco_role_id = $this->session->userdata('eco_role_id');
     if($eco_user_id == '' || $eco_company_id == ''){ header('location:'.base_url().'User'); }
+
     $emp_user_id = $this->uri->segment(3);
-    echo $emp_user_id;
+    // echo $emp_user_id;
     if($emp_user_id){
       $data['customer_list'] = $this->User_Model->get_list_by_id('customer_addedby',$emp_user_id,'','','customer_id','DESC','customer');
     } else{
@@ -141,25 +142,41 @@ class Master extends CI_Controller{
     $this->load->view('Include/footer', $data);
   }
 
-  public function get_membership_details(){
-    $mem_sch_id = $_POST['mem_sch_id'];
+  public function get_membership_details($mem_sch_id){
+    $eco_user_id = $this->session->userdata('eco_user_id');
+    $eco_company_id = $this->session->userdata('eco_company_id');
+    $eco_role_id = $this->session->userdata('eco_role_id');
+    if($eco_user_id == '' || $eco_company_id == ''){ header('location:'.base_url().'User'); }
+    $membership_details = $this->User_Model->get_info_arr('mem_sch_id', $mem_sch_id, 'membership_scheme');
     $membership_details_list = $this->User_Model->get_list_by_id2('*','mem_sch_id',$mem_sch_id,'mem_sch_details');
-    foreach ($membership_details_list as $list) {
-      echo "<tr><td>".$list->mem_sch_det_feature."</td>
-          <td class='text-center'>
-            ";
-            if($list->mem_sch_det_status == 0){
-              echo "<span class='fa fa-times text-danger'></span>";
-            } elseif ($list->mem_sch_det_status == 1) {
-              echo "<span class='fa fa-check text-success'></span>";
-            } elseif ($list->mem_sch_det_status == 2) {
-              echo $list->mem_sch_det_val;
-            }
-          echo "
-          </td>
-        </tr>
-      ";
-    }
+
+    if(!$membership_details_list || !$membership_details){ header('location:'.base_url().'Master/select_cust_membership'); }
+    $data['membership_details'] = $membership_details[0];
+    $data['membership_details_list'] = $membership_details_list;
+    // $data['membership_scheme_list'] = $this->Website_Model->membership_scheme_list();
+
+    $this->load->view('Include/head', $data);
+    $this->load->view('Include/navbar', $data);
+    $this->load->view('User/get_membership_details', $data);
+    $this->load->view('Include/footer', $data);
+    // $mem_sch_id = $_POST['mem_sch_id'];
+    // $membership_details_list = $this->User_Model->get_list_by_id2('*','mem_sch_id',$mem_sch_id,'mem_sch_details');
+    // foreach ($membership_details_list as $list) {
+    //   echo "<tr><td>".$list->mem_sch_det_feature."</td>
+    //       <td class='text-center'>
+    //         ";
+    //         if($list->mem_sch_det_status == 0){
+    //           echo "<span class='fa fa-times text-danger'></span>";
+    //         } elseif ($list->mem_sch_det_status == 1) {
+    //           echo "<span class='fa fa-check text-success'></span>";
+    //         } elseif ($list->mem_sch_det_status == 2) {
+    //           echo $list->mem_sch_det_val;
+    //         }
+    //       echo "
+    //       </td>
+    //     </tr>
+    //   ";
+    // }
   }
 
   // Add Customer...
@@ -197,6 +214,7 @@ class Master extends CI_Controller{
           'cust_mem_valid_days' => $mem_sch_valid,
           'cust_mem_amt' => $membership_info[0]['mem_sch_amt'],
           'cust_mem_point' => $membership_info[0]['mem_sch_point'],
+          'payment_type_id' => $_POST['payment_type_id'],
           'cust_mem_status' => 0,
           'cust_mem_date' => date('d-m-Y h:i:s A'),
           'cust_mem_addedby' => $eco_user_id
@@ -213,9 +231,13 @@ class Master extends CI_Controller{
       header('location:'.base_url().'Master/customer_list');
     }
     // $data['customer_level_list'] = $this->User_Model->get_list_by_id('company_id',$eco_company_id,'customer_level_status','1',"customer_level_id",'DESC','customer_level');
-    $data['customer_member_list'] = $this->User_Model->get_list_by_id('company_id','','mem_sch_status','1',"mem_sch_id",'DESC','membership_scheme');
+    $data['customer_member_list'] = $this->User_Model->get_list_by_id('','','mem_sch_status','1',"mem_sch_id",'DESC','membership_scheme');
     $data['payment_type_list'] = $this->User_Model->get_list2('payment_type_id','ASC','payment_type');
     $data['mem_sch_id'] = $mem_sch_id;
+
+    $data['country_list'] = $this->User_Model->get_list2('country_name','ASC','country');
+    $data['state_list'] = $this->User_Model->get_list_by_id2('state_id, country_id, state_name','','','state');
+    $data['city_list'] = $this->User_Model->get_list_by_id2('district_id as city_id , state_id, district_name as city_name','','','district');
     $this->load->view('Include/head', $data);
     $this->load->view('Include/navbar', $data);
     $this->load->view('User/customer', $data);
@@ -249,6 +271,10 @@ class Master extends CI_Controller{
       $data['customer_info'] = $customer_info[0];
       // $data['customer_level_list'] = $this->User_Model->get_list_by_id('company_id',$eco_company_id,'customer_level_status','1',"customer_level_id",'DESC','customer_level');
       $data['customer_member_list'] = $this->User_Model->get_list_by_id('company_id',$eco_company_id,'mem_sch_status','1',"mem_sch_id",'DESC','membership_scheme');
+
+      $data['country_list'] = $this->User_Model->get_list2('country_name','ASC','country');
+      $data['state_list'] = $this->User_Model->get_list_by_id2('state_id, country_id, state_name','','','state');
+      $data['city_list'] = $this->User_Model->get_list_by_id2('district_id as city_id , state_id, district_name as city_name','','','district');
       $this->load->view('Include/head', $data);
       $this->load->view('Include/navbar', $data);
       $this->load->view('User/customer', $data);
@@ -1809,4 +1835,99 @@ class Master extends CI_Controller{
     $this->load->view('User/reseller_reg_list', $data);
     $this->load->view('Include/footer', $data);
   }
+
+
+  /******************************* Store ******************************/
+
+    // Store List...
+    public function store_list(){
+      $eco_user_id = $this->session->userdata('eco_user_id');
+      $eco_company_id = $this->session->userdata('eco_company_id');
+      $eco_role_id = $this->session->userdata('eco_role_id');
+      if($eco_user_id == '' || $eco_company_id == '' || ($eco_role_id != 1 && $eco_role_id != 2)){ header('location:'.base_url().'User'); }
+      $data['store_list'] = $this->User_Model->get_list2('store_id','DESC','store');
+      $this->load->view('Include/head', $data);
+      $this->load->view('Include/navbar', $data);
+      $this->load->view('User/store_list', $data);
+      $this->load->view('Include/footer', $data);
+    }
+
+    public function store(){
+      $eco_user_id = $this->session->userdata('eco_user_id');
+      $eco_company_id = $this->session->userdata('eco_company_id');
+      $eco_role_id = $this->session->userdata('eco_role_id');
+      if($eco_user_id == '' || $eco_company_id == '' || ($eco_role_id != 1 && $eco_role_id != 2)){ header('location:'.base_url().'User'); }
+      $this->form_validation->set_rules('store_name', 'store_name', 'trim|required');
+      if ($this->form_validation->run() != FALSE) {
+
+        $save_user_data = array(
+          'company_id' => $eco_company_id,
+          'user_addedby' => $eco_user_id,
+          'role_id' => '8',
+          'user_name' => $_POST['store_name'],
+          'user_city' => $_POST['store_city'],
+          'user_email' => $_POST['store_email'],
+          'user_mobile' => $_POST['store_mobile'],
+          'user_password' => $_POST['store_password'],
+        );
+        $user_id = $this->User_Model->save_data('user', $save_user_data);
+
+        $save_data = $_POST;
+        $save_data['company_id'] = $eco_company_id;
+        $save_data['store_user_id'] = $user_id;
+        $save_data['store_addedby'] = $eco_user_id;
+        $this->User_Model->save_data('store', $save_data);
+
+        $this->session->set_flashdata('save_success','success');
+        header('location:'.base_url().'Master/store_list');
+      }
+      $data['country_list'] = $this->User_Model->get_list2('country_id','DESC','country');
+      $this->load->view('Include/head', $data);
+      $this->load->view('Include/navbar', $data);
+      $this->load->view('User/store', $data);
+      $this->load->view('Include/footer', $data);
+    }
+
+    public function edit_store($user_id){
+      $eco_user_id = $this->session->userdata('eco_user_id');
+      $eco_company_id = $this->session->userdata('eco_company_id');
+      $eco_role_id = $this->session->userdata('eco_role_id');
+      if($eco_user_id == '' || $eco_company_id == '' || ($eco_role_id != 1 && $eco_role_id != 2)){ header('location:'.base_url().'User'); }
+      $this->form_validation->set_rules('store_name', 'store_name', 'trim|required');
+      if ($this->form_validation->run() != FALSE) {
+
+        $update_user_data = array(
+          'user_addedby' => $eco_user_id,
+          'role_id' => '8',
+          'user_name' => $_POST['store_name'],
+          'user_city' => $_POST['store_city'],
+          'user_email' => $_POST['store_email'],
+          'user_mobile' => $_POST['store_mobile'],
+          'user_password' => $_POST['store_password'],
+        );
+        $this->User_Model->update_info('user_id', $user_id, 'user', $update_user_data);
+
+        $update_data = $_POST;
+        $update_data['store_addedby'] = $eco_user_id;
+        $this->User_Model->update_info('store_user_id', $user_id, 'store', $update_data);
+
+        $this->session->set_flashdata('update_success','success');
+        header('location:'.base_url().'Master/store_list');
+      }
+
+      $store_info = $this->User_Model->get_info_arr('store_user_id',$user_id,'store');
+      if(!$store_info){ header('location:'.base_url().'Master/store_list'); }
+      $data['update'] = 'update';
+      $data['store_info'] = $store_info[0];
+
+      $country_id = $store_info[0]['country_id'];
+      $state_id = $store_info[0]['state_id'];
+      $data['country_list'] = $this->User_Model->get_list2('country_id','DESC','country');
+      $data['state_list'] = $this->User_Model->get_list_by_id_com('','country_id',$country_id,'','','state_name','ASC','state');
+      $data['district_list'] = $this->User_Model->get_list_by_id_com('','state_id',$state_id,'','','district_name','ASC','district');
+      $this->load->view('Include/head', $data);
+      $this->load->view('Include/navbar', $data);
+      $this->load->view('User/store', $data);
+      $this->load->view('Include/footer', $data);
+    }
 }

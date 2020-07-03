@@ -51,7 +51,9 @@ class User_Model extends CI_Model{
 
   public function get_list_by_id2($select_fields,$field_name,$value,$table_name){
     $this->db->select($select_fields);
-    $this->db->where($field_name,$value);
+    if($field_name){
+      $this->db->where($field_name,$value);
+    }
     $this->db->from($table_name);
     $query = $this->db->get();
     $result = $query->result();
@@ -285,17 +287,30 @@ class User_Model extends CI_Model{
 
 /********************************************** Transaction **************************************/
 
-  public function get_tot_sale($product_id){
-    $this->db->select('SUM(order_pro.order_pro_tot_weight) as total_sale');
+  public function get_tot_sale($product_id, $pro_attri_id){
+    $this->db->select('SUM(order_pro.order_pro_tot_weight) as total_sale, SUM(order_pro.order_pro_qty) as total_sale_qty,');
     $this->db->from('order_pro');
     $this->db->where('order_pro.product_id',$product_id);
+    $this->db->where('order_pro.pro_attri_id',$pro_attri_id);
     $this->db->where('order_tbl.order_status',6);
     $this->db->join('order_tbl','order_tbl.order_id = order_pro.order_id','LEFT');
     $query = $this->db->get();
     $result = $query->result_array();
-    if($result){ $total = $result[0]['total_sale']; }
-    else{ $total = 0;  }
-    return $total;
+    // if($result){ $total = $result[0]['total_sale']; }
+    // else{ $total = 0;  }
+    // return $total;
+    return $result;
+  }
+
+  public function get_all_product_attr_list(){
+    $this->db->select('product.*,product_attribute.*,unit.unit_name');
+    $this->db->from('product');
+    $this->db->where('product.product_status',1);
+    $this->db->join('product_attribute','product.product_id = product_attribute.product_id','LEFT');
+    $this->db->join('unit','unit.unit_id = product_attribute.pro_attri_unit','LEFT');
+    $query = $this->db->get();
+    $result = $query->result();
+    return $result;
   }
 
 

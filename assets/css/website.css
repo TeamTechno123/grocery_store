@@ -273,18 +273,16 @@ a{
     -webkit-transform: rotate(-45deg) scale(0.75,1);
     z-index: 10;
 }
-.discount:before {
+/* .discount:before {
   content: '';
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  top: 1.2em;
+  left: -0.6em;
   position: absolute;
   margin: -0.3em -5em;
   transform: scale(0.7);
   -webkit-transform: scale(0.7);
   border: 2px rgba(255,255,255,0.7) dashed;
-}
+} */
 
 .discount-small{
   width: 20px;

@@ -8,7 +8,7 @@ class Transaction extends CI_Controller{
     date_default_timezone_set('Asia/Kolkata');
     $this->load->model('User_Model');
     $this->load->model('Order_Model');
-    // $this->load->model('Transaction_Model');
+    $this->load->model('Website_Model');
   }
 
 /*************************************** Employee_Cash **********************************/
@@ -17,7 +17,7 @@ class Transaction extends CI_Controller{
     $eco_user_id = $this->session->userdata('eco_user_id');
     $eco_company_id = $this->session->userdata('eco_company_id');
     $eco_role_id = $this->session->userdata('eco_role_id');
-    if($eco_user_id == '' && $eco_company_id == ''|| ($eco_role_id != 1)){ header('location:'.base_url().'User'); }
+    if($eco_user_id == '' && $eco_company_id == ''|| ($eco_role_id != 1 && $eco_role_id != 3)){ header('location:'.base_url().'User'); }
     $data['employee_cash_list'] = $this->User_Model->get_list2('employee_cash_id','DESC','employee_cash');
     $this->load->view('Include/head', $data);
     $this->load->view('Include/navbar', $data);
@@ -30,7 +30,7 @@ class Transaction extends CI_Controller{
     $eco_user_id = $this->session->userdata('eco_user_id');
     $eco_company_id = $this->session->userdata('eco_company_id');
     $eco_role_id = $this->session->userdata('eco_role_id');
-    if($eco_user_id == '' && $eco_company_id == ''|| ($eco_role_id != 1)){ header('location:'.base_url().'User'); }
+    if($eco_user_id == '' && $eco_company_id == ''|| ($eco_role_id != 1 && $eco_role_id != 3)){ header('location:'.base_url().'User'); }
 
     $this->form_validation->set_rules('employee_cash_amt', 'Name', 'trim|required');
     if ($this->form_validation->run() != FALSE) {
@@ -55,7 +55,7 @@ class Transaction extends CI_Controller{
     $eco_user_id = $this->session->userdata('eco_user_id');
     $eco_company_id = $this->session->userdata('eco_company_id');
     $eco_role_id = $this->session->userdata('eco_role_id');
-    if($eco_user_id == '' && $eco_company_id == ''|| ($eco_role_id != 1)){ header('location:'.base_url().'User'); }
+    if($eco_user_id == '' && $eco_company_id == ''|| ($eco_role_id != 1 && $eco_role_id != 3)){ header('location:'.base_url().'User'); }
 
     $this->form_validation->set_rules('employee_cash_amt', 'Name', 'trim|required');
     if ($this->form_validation->run() != FALSE) {
@@ -261,7 +261,7 @@ class Transaction extends CI_Controller{
     $eco_user_id = $this->session->userdata('eco_user_id');
     $eco_company_id = $this->session->userdata('eco_company_id');
     $eco_role_id = $this->session->userdata('eco_role_id');
-    if($eco_user_id == '' || $eco_company_id == '' || ($eco_role_id != 1)){ header('location:'.base_url().'User'); }
+    if($eco_user_id == '' || $eco_company_id == '' || ($eco_role_id != 1 && $eco_role_id != 2 && $eco_role_id != 3)){ header('location:'.base_url().'User'); }
     $data['purchase_list'] = $this->User_Model->get_list_by_id('','','','','purchase_id','DESC','purchase');
     $this->load->view('Include/head', $data);
     $this->load->view('Include/navbar', $data);
@@ -273,7 +273,7 @@ class Transaction extends CI_Controller{
     $eco_user_id = $this->session->userdata('eco_user_id');
     $eco_company_id = $this->session->userdata('eco_company_id');
     $eco_role_id = $this->session->userdata('eco_role_id');
-    if($eco_user_id == '' || $eco_company_id == '' || ($eco_role_id != 1)){ header('location:'.base_url().'User'); }
+    if($eco_user_id == '' || $eco_company_id == '' || ($eco_role_id != 1 && $eco_role_id != 2 && $eco_role_id != 3)){ header('location:'.base_url().'User'); }
 
     $this->form_validation->set_rules('purchase_no', 'Name', 'trim|required');
     if ($this->form_validation->run() != FALSE) {
@@ -296,11 +296,11 @@ class Transaction extends CI_Controller{
     }
 
     $data['vendor_list'] = $this->User_Model->get_list_by_id('vendor_status',1,'','','vendor_name','ASC','vendor');
-    $data['product_list'] = $this->User_Model->get_list_by_id('product_status',1,'','','product_name','ASC','product');
+    $data['product_list'] = $this->User_Model->get_all_product_attr_list();
+    // $data['product_list'] = $this->User_Model->get_list_by_id('product_status',1,'','','product_name','ASC','product');
     $data['unit_list'] = $this->User_Model->get_list_by_id('unit_status',1,'','','unit_name','ASC','unit');
-    // $data['product_list'] = $this->Order_Model->order_product_list($eco_company_id);
     $data['purchase_no'] = $this->User_Model->get_count_no('purchase_no', 'purchase');
-    // print_r($data['product_list']);
+
     $this->load->view('Include/head', $data);
     $this->load->view('Include/navbar', $data);
     $this->load->view('Transaction/purchase', $data);
@@ -346,7 +346,8 @@ class Transaction extends CI_Controller{
     }
 
     $data['vendor_list'] = $this->User_Model->get_list_by_id('vendor_status',1,'','','vendor_name','ASC','vendor');
-    $data['product_list'] = $this->User_Model->get_list_by_id('product_status',1,'','','product_name','ASC','product');
+    $data['product_list'] = $this->User_Model->get_all_product_attr_list();
+    // $data['product_list'] = $this->User_Model->get_list_by_id('product_status',1,'','','product_name','ASC','product');
     $data['unit_list'] = $this->User_Model->get_list_by_id('unit_status',1,'','','unit_name','ASC','unit');
 
     $purchase_info = $this->User_Model->get_info_arr('purchase_id',$purchase_id,'purchase');
@@ -378,22 +379,36 @@ class Transaction extends CI_Controller{
     $eco_user_id = $this->session->userdata('eco_user_id');
     $eco_company_id = $this->session->userdata('eco_company_id');
     $eco_role_id = $this->session->userdata('eco_role_id');
-    if($eco_user_id == '' || $eco_company_id == '' || ($eco_role_id != 1)){ header('location:'.base_url().'User'); }
-    $product_list = $this->User_Model->get_list_by_id('product_status',1,'','','product_name','ASC','product');
+    if($eco_user_id == '' || $eco_company_id == '' || ($eco_role_id != 1 && $eco_role_id != 2 && $eco_role_id != 3)){ header('location:'.base_url().'User'); }
+    $product_list = $this->User_Model->get_all_product_attr_list();
+    // $product_list = $this->User_Model->get_list_by_id('product_status',1,'','','product_name','ASC','product');
 
     foreach ($product_list as $product_list1) {
       $product_id = $product_list1->product_id;
-      $product_unit = $product_list1->product_unit;
-      $tot_purchase = $this->User_Model->get_sum('','purchase_pro_tot_weight','product_id',$product_id,'','','purchase_pro');
+      $pro_attri_id = $product_list1->pro_attri_id;
+      $product_unit = $product_list1->unit_name;
+
+      $tot_purchase = $this->User_Model->get_sum('','purchase_pro_tot_weight','product_id',$product_id,'pro_attri_id','','purchase_pro');
       if(!$tot_purchase){ $tot_purchase = 0; }
+      $tot_purchase_qty = $this->User_Model->get_sum('','purchase_pro_qty','product_id',$product_id,'pro_attri_id','','purchase_pro');
+      if(!$tot_purchase_qty){ $tot_purchase_qty = 0; }
 
-      $tot_sale = $this->User_Model->get_tot_sale($product_id);
+      $tot_sale_data = $this->User_Model->get_tot_sale($product_id,$pro_attri_id);
+      $tot_sale = $tot_sale_data[0]['total_sale'];
+      $total_sale_qty = $tot_sale_data[0]['total_sale_qty'];
       if(!$tot_sale){ $tot_sale = 0; }
-      $bal_stock = $tot_purchase - $tot_sale;
+      if(!$total_sale_qty){ $total_sale_qty = 0; }
 
-      $product_list1->tot_purchase = $tot_purchase.' '.$product_unit;
-      $product_list1->tot_sale = $tot_sale.' '.$product_unit;
-      $product_list1->bal_stock = $bal_stock.' '.$product_unit;
+      $bal_stock = $tot_purchase - $tot_sale;
+      $bal_qty_stock = $tot_purchase_qty - $total_sale_qty;
+
+      $product_list1->tot_purchase = $tot_purchase.''.$product_unit;
+      $product_list1->tot_sale = $tot_sale.''.$product_unit;
+      $product_list1->bal_stock = $bal_stock.''.$product_unit;
+
+      $product_list1->tot_purchase_qty = $tot_purchase_qty.'NOS';
+      $product_list1->total_sale_qty = $total_sale_qty.'NOS';
+      $product_list1->bal_qty_stock = $bal_qty_stock.'NOS';
 
       $product_list2[] = $product_list1;
     }

@@ -25,7 +25,12 @@ class Order extends CI_Controller{
     $eco_company_id = $this->session->userdata('eco_company_id');
     $eco_role_id = $this->session->userdata('eco_role_id');
     if($eco_user_id == '' || $eco_company_id == '' || ($eco_role_id != 1 && $eco_role_id != 2 && $eco_role_id != 3 && $eco_role_id != 4 && $eco_role_id != 5)){ header('location:'.base_url().'User'); }
-    $data['order_list'] = $this->Order_Model->order_list();
+    if($eco_role_id == 1){
+      $data['order_list'] = $this->Order_Model->order_list('');
+    } else{
+      $data['order_list'] = $this->Order_Model->order_list($eco_user_id);
+    }
+
     $data['order_status_list'] = $this->User_Model->get_list2('order_status_id','ASC','order_status');
     $data['delivery_boy_list'] = $this->User_Model->get_list_by_id2('user_id, user_name','role_id',7,'user');
     $this->load->view('Include/head', $data);
@@ -43,23 +48,14 @@ class Order extends CI_Controller{
     // echo $eco_role_id;
     $this->form_validation->set_rules('order_no', 'Name', 'trim|required');
     if ($this->form_validation->run() != FALSE) {
-      // $is_addr_same = $this->input->post('is_addr_same');
-      // if(!isset($is_addr_same)){ $is_addr_same = 0; }
       $save_data = $_POST;
       unset($save_data['select_product']);
       unset($save_data['input']);
+
+      $save_data['payment_status'] = "0";
+      $save_data['payment_type'] = "2";
       $save_data['order_added_date'] = date('d-m-Y h:i:s A');
       $save_data['order_addedby'] = $eco_user_id;
-      // $save_data['is_addr_same'] = $is_addr_same;
-
-      // if($is_addr_same == 1){
-      //   $save_data['order_cust_s_fname'] = $this->input->post('order_cust_fname');
-      //   $save_data['order_cust_s_lname'] = $this->input->post('order_cust_lname');
-      //   $save_data['order_cust_s_addr'] = $this->input->post('order_cust_addr');
-      //   $save_data['order_cust_s_city'] = $this->input->post('order_cust_city');
-      //   $save_data['order_cust_s_pin'] = $this->input->post('order_cust_pin');
-      //   $save_data['order_cust_s_mob'] = $this->input->post('order_cust_mob');
-      // }
       $order_id = $this->User_Model->save_data('order_tbl', $save_data);
 
       foreach($_POST['input'] as $multi_data){
@@ -76,6 +72,10 @@ class Order extends CI_Controller{
     $data['product_list'] = $this->Order_Model->order_product_list($eco_company_id);
     $data['order_no'] = $this->User_Model->get_count_no('order_no', 'order_tbl');
     // print_r($data['product_list']);
+    $data['country_list'] = $this->User_Model->get_list2('country_name','ASC','country');
+    $data['state_list'] = $this->User_Model->get_list_by_id2('state_id, country_id, state_name','','','state');
+    $data['city_list'] = $this->User_Model->get_list_by_id2('district_id as city_id , state_id, district_name as city_name','','','district');
+
     $this->load->view('Include/head', $data);
     $this->load->view('Include/navbar', $data);
     $this->load->view('Order/order', $data);
@@ -91,24 +91,12 @@ class Order extends CI_Controller{
 
     $this->form_validation->set_rules('order_no', 'Name', 'trim|required');
     if ($this->form_validation->run() != FALSE) {
-      // $is_addr_same = $this->input->post('is_addr_same');
-      // if(!isset($is_addr_same)){ $is_addr_same = 0; }
       $update_data = $_POST;
       unset($update_data['select_product']);
       unset($update_data['input']);
-      // $update_data['company_id'] = $eco_company_id;
       $update_data['order_added_date'] = date('d-m-Y h:i:s A');
       $update_data['order_addedby'] = $eco_user_id;
-      // $update_data['is_addr_same'] = $is_addr_same;
 
-      // if($is_addr_same == 1){
-      //   $update_data['order_cust_s_fname'] = $this->input->post('order_cust_fname');
-      //   $update_data['order_cust_s_lname'] = $this->input->post('order_cust_lname');
-      //   $update_data['order_cust_s_addr'] = $this->input->post('order_cust_addr');
-      //   $update_data['order_cust_s_city'] = $this->input->post('order_cust_city');
-      //   $update_data['order_cust_s_pin'] = $this->input->post('order_cust_pin');
-      //   $update_data['order_cust_s_mob'] = $this->input->post('order_cust_mob');
-      // }
       $this->User_Model->update_info('order_id', $order_id, 'order_tbl', $update_data);
       foreach($_POST['input'] as $multi_data){
         if(isset($multi_data['order_pro_id'])){
@@ -134,14 +122,21 @@ class Order extends CI_Controller{
     $data['product_list'] = $this->Order_Model->product_list($eco_company_id);
     $order_info = $this->User_Model->get_info_arr('order_id',$order_id,'order_tbl');
     if(!$order_info){ header('location:'.base_url().'Order/order_list'); }
+    if($order_info[0]['order_status'] > 1 || $order_info[0]['order_addedby'] == 0){ header('location:'.base_url().'Order/order_list'); }
     $data['update'] = 'update';
     $data['order_info'] = $order_info[0];
     $data['order_pro_list'] = $this->User_Model->get_list_by_id('order_id',$order_id,'','','order_pro_id','ASC','order_pro');
+
+    $data['country_list'] = $this->User_Model->get_list2('country_name','ASC','country');
+    $data['state_list'] = $this->User_Model->get_list_by_id2('state_id, country_id, state_name','','','state');
+    $data['city_list'] = $this->User_Model->get_list_by_id2('district_id as city_id , state_id, district_name as city_name','','','district');
     $this->load->view('Include/head', $data);
     $this->load->view('Include/navbar', $data);
     $this->load->view('Order/order', $data);
     $this->load->view('Include/footer', $data);
   }
+
+
 
   public function get_product_by_attr_id(){
     $pro_attri_id = $this->input->post('pro_attri_id');
@@ -182,15 +177,38 @@ class Order extends CI_Controller{
   }
 
   // Change Status Order.....
-  public function update_order_status(){
-    $order_id = $this->input->post('order_id');
-    $order_status = $this->input->post('order_status');
-    // $update_data['order_status'] = $order_status;
-    $update_data = $_POST;
-    unset($update_data['order_id']);
-    $this->User_Model->update_info('order_id', $order_id, 'order_tbl', $update_data);
-    $status_info = $this->User_Model->get_info_arr('order_status_id',$order_status,'order_status');
-    echo $status_info[0]['order_status_name'];
+  public function update_order_status($order_id){
+    $eco_user_id = $this->session->userdata('eco_user_id');
+    $eco_company_id = $this->session->userdata('eco_company_id');
+    $eco_role_id = $this->session->userdata('eco_role_id');
+    if($eco_user_id == '' || $eco_company_id == ''){ header('location:'.base_url().'User'); }
+
+    $this->form_validation->set_rules('order_status', 'Name', 'trim|required');
+    if ($this->form_validation->run() != FALSE) {
+      $update_data = $_POST;
+      $this->User_Model->update_info('order_id', $order_id, 'order_tbl', $update_data);
+      $this->session->set_flashdata('update_success','success');
+      header('location:'.base_url().'Order/order_list');
+    }
+
+    $order_details = $this->User_Model->get_info_arr2_fields('*', 'order_id', $order_id, '', '', '', '', 'order_tbl');
+    if(!$order_details){ header('location:'.base_url().'Order/order_list'); }
+    $data['order_status_list'] = $this->User_Model->get_list2('order_status_id','ASC','order_status');
+    $data['delivery_boy_list'] = $this->User_Model->get_list_by_id2('user_id, user_name','role_id',7,'user');
+    $data['order_details'] = $order_details[0];
+    $this->load->view('Include/head', $data);
+    $this->load->view('Include/navbar', $data);
+    $this->load->view('Order/update_order_status', $data);
+    $this->load->view('Include/footer', $data);
+
+
+    // $order_id = $this->input->post('order_id');
+    // $order_status = $this->input->post('order_status');
+    // $update_data = $_POST;
+    // unset($update_data['order_id']);
+    // $this->User_Model->update_info('order_id', $order_id, 'order_tbl', $update_data);
+    // $status_info = $this->User_Model->get_info_arr('order_status_id',$order_status,'order_status');
+    // echo $status_info[0]['order_status_name'];
   }
 
 /************************************** Receipt ***********************************/
@@ -314,6 +332,73 @@ class Order extends CI_Controller{
     $this->load->view('Include/footer', $data);
 
     // print_r($data['order_list']);
+  }
+
+  // Change Payment Status Order.....
+  public function update_order_payment_status(){
+    $order_id = $this->input->post('order_id');
+    $payment_status = $this->input->post('payment_status');
+    // $update_data['order_status'] = $order_status;
+    $update_data = $_POST;
+    unset($update_data['order_id']);
+    $this->User_Model->update_info('order_id', $order_id, 'order_tbl', $update_data);
+  }
+
+  public function delivery_boy_order_status($order_id){
+    $eco_user_id = $this->session->userdata('eco_user_id');
+    $eco_company_id = $this->session->userdata('eco_company_id');
+    $eco_role_id = $this->session->userdata('eco_role_id');
+    if($eco_user_id == '' || $eco_company_id == '' || ($eco_role_id != 7)){ header('location:'.base_url().'User'); }
+
+    $this->form_validation->set_rules('order_status', 'Name', 'trim|required');
+    if ($this->form_validation->run() != FALSE) {
+      $update_data = $_POST;
+      $this->User_Model->update_info('order_id', $order_id, 'order_tbl', $update_data);
+      $this->session->set_flashdata('update_success','success');
+      header('location:'.base_url().'Order/delivery_boy_order_list');
+    }
+
+    $order_details = $this->User_Model->get_info_arr2_fields('*', 'order_id', $order_id, 'order_assign_to', $eco_user_id, 'order_status >', '3', 'order_tbl');
+    if(!$order_details){ header('location:'.base_url().'Order/delivery_boy_order_list'); }
+    $data['order_status_list'] = $this->User_Model->get_list2('order_status_id','ASC','order_status');
+    $data['order_details'] = $order_details[0];
+    $this->load->view('Include/head', $data);
+    $this->load->view('Include/navbar', $data);
+    $this->load->view('Order/delivery_boy_order_status', $data);
+    $this->load->view('Include/footer', $data);
+  }
+
+  public function delivery_boy_payment_status($order_id){
+    $eco_user_id = $this->session->userdata('eco_user_id');
+    $eco_company_id = $this->session->userdata('eco_company_id');
+    $eco_role_id = $this->session->userdata('eco_role_id');
+    if($eco_user_id == '' || $eco_company_id == '' || ($eco_role_id != 7)){ header('location:'.base_url().'User'); }
+
+    $this->form_validation->set_rules('payment_status', 'Name', 'trim|required');
+    if ($this->form_validation->run() != FALSE) {
+      $payment_status = $_POST['payment_status'];
+      $update_data = $_POST;
+      $this->User_Model->update_info('order_id', $order_id, 'order_tbl', $update_data);
+      if($payment_status == 2){
+        // Dissable Point Use...
+        $update_point_use_data['point_use_status'] = 0;
+        $this->User_Model->update_info('order_id', $order_id, 'point_use', $update_point_use_data);
+        // Dissable Coupon Used...
+        $update_coupon_used_data['coupon_used_status'] = 0;
+        $this->User_Model->update_info('order_id', $order_id, 'coupon_used', $update_coupon_used_data);
+      }
+      $this->session->set_flashdata('update_success','success');
+      header('location:'.base_url().'Order/delivery_boy_order_list');
+    }
+
+    $order_details = $this->User_Model->get_info_arr2_fields('*', 'order_id', $order_id, 'order_assign_to', $eco_user_id, 'order_status >', '3', 'order_tbl');
+    if(!$order_details){ header('location:'.base_url().'Order/delivery_boy_order_list'); }
+    $data['order_status_list'] = $this->User_Model->get_list2('order_status_id','ASC','order_status');
+    $data['order_details'] = $order_details[0];
+    $this->load->view('Include/head', $data);
+    $this->load->view('Include/navbar', $data);
+    $this->load->view('Order/delivery_boy_payment_status', $data);
+    $this->load->view('Include/footer', $data);
   }
 
 

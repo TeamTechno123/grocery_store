@@ -18,9 +18,9 @@
                     <th style="width: 10px">#</th>
                     <th>Date</th>
                     <th>Amount</th>
-                    <th>Status</th>
-                    <th>View</th>
-                    <th>Print</th>
+                    <th style="width:120px !important;">Status</th>
+                    <th style="width:50px !important;">View</th>
+                    <th style="width:120px !important;">Action</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -35,9 +35,23 @@
                       <td><?php echo $i; ?></td>
                       <td><?php echo $order_list1->order_date; ?></td>
                       <td><?php echo $order_list1->order_total_amount; ?></td>
-                      <td><a href="<?php echo base_url(); ?>Order-Tracking/<?php echo $order_list1->order_id; ?>"> <button type="button" class="btn m-f12 btn-sm btn-outline-primary"><?php echo $status_info[0]['order_status_name']; ?></button> </a></td>
+                      <td>
+                        <?php if($order_list1->payment_status == 2){
+                          echo '<span class="text-danger text-bold">Canceled</span>';
+                        } else{ ?>
+                          <a href="<?php echo base_url(); ?>Order-Tracking/<?php echo $order_list1->order_id; ?>"> <button type="button" class="btn m-f12 btn-sm btn-outline-primary"><?php echo $status_info[0]['order_status_name']; ?></button> </a>
+                        <?php } ?>
+                      </td>
                       <td> <a href="<?php echo base_url(); ?>Order-Details/<?php echo $order_list1->order_id; ?>"> <button type="button" class="btn m-f12 btn-sm btn-outline-success">View</button> </a> </td>
-                      <td> <a target="_blank" href="<?php echo base_url(); ?>Order-Print/<?php echo $order_list1->order_id; ?>"> <button type="button" class="btn m-f12 btn-sm btn-outline-success">View</button> </a> </td>
+                      <td>
+                        <?php if($order_list1->order_status == 6 && $order_list1->payment_status == 1){ ?>
+                          <a target="_blank" href="<?php echo base_url(); ?>Order-Print/<?php echo $order_list1->order_id; ?>"> <button type="button" class="btn m-f12 btn-sm btn-outline-success"><i class="fa fa-print"></i></button> </a>
+                        <?php } elseif ($order_list1->payment_status == 2) {
+                          echo '<span class="text-danger">Canceled</span>';
+                        } elseif ($order_list1->order_status < 6 && $order_list1->payment_status != 2) { ?>
+                          <a href="<?php echo base_url(); ?>Website/cancel_order/<?php echo $order_list1->order_id; ?>" onclick="return confirm('Cancel This Order');"> <button type="button" class="btn m-f12 btn-sm btn-outline-danger">Cancel Order</button> </a>
+                        <?php } ?>
+                      </td>
                     </tr>
                   <?php } ?>
                 </tbody>
@@ -51,7 +65,11 @@
     </div>
   </div>
 </section>
-
-
-
   <?php include('footer.php'); ?>
+  <script type="text/javascript">
+    <?php if($this->session->flashdata('cancel_success')){ ?>
+      $(document).ready(function(){
+        toastr.success('Order Canceled successfully');
+      });
+    <?php } ?>
+  </script>

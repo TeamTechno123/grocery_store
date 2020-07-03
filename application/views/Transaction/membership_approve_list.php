@@ -47,8 +47,8 @@
                   ?>
                   <tr>
                     <td><?php echo $i; ?></td>
-                    <td><?php echo $customer_info[0]['customer_fname'].' '.$customer_info[0]['customer_lname']; ?></td>
-                    <td><?php echo $mem_sch_info[0]['mem_sch_name']; ?></td>
+                    <td><?php if($customer_info){ echo $customer_info[0]['customer_fname'].' '.$customer_info[0]['customer_lname']; } ?></td>
+                    <td><?php if($mem_sch_info){  echo $mem_sch_info[0]['mem_sch_name']; } ?></td>
                     <td><?php echo $list->cust_mem_amt; ?></td>
                     <td><?php echo $list->cust_mem_start_date; ?></td>
                     <td><?php echo $list->cust_mem_end_date; ?></td>

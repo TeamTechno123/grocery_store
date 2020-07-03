@@ -24,9 +24,9 @@
           <li class="text-div">No EMI facility is available.</li>
         </ol>
         <h4 class="text-left">Credit Card/Debit Card Details : </h4>
-        <p class="text-div">The Credit Card/Debit Card details provided to Needs On Door. By the customer will not be shared with any third party. In case of fraudulent matters, the company holds the right to share the details with the concerned body for verification. The customer shall not under any circumstance use a credit/debit card that is not lawfully owned by him. The customer is hence requested to provide only valid and accurate card details.</p>
+        <p class="text-div">The Credit Card/Debit Card details provided to Kiranabhara.com. By the customer will not be shared with any third party. In case of fraudulent matters, the company holds the right to share the details with the concerned body for verification. The customer shall not under any circumstance use a credit/debit card that is not lawfully owned by him. The customer is hence requested to provide only valid and accurate card details.</p>
         <p class="text-left"> <b>Fraudulent Transactions</b> </p>
-        <p class="text-div">If any fraud transactions are carried by any of the customers on the website, Needs On Door reserves the right to recover all the losses and expenses incurred like lawyer fees, collection charges, etc. from the concerned party. The company also holds the right to take legal action against such person.</p>
+        <p class="text-div">If any fraud transactions are carried by any of the customers on the website, Kiranabhara.com reserves the right to recover all the losses and expenses incurred like lawyer fees, collection charges, etc. from the concerned party. The company also holds the right to take legal action against such person.</p>
 
         <h4 class="text-left">Delivery : </h4>
         <p class="text-div">Note: Please Note that our shipping policies have changed and now all shipping charges are automatically calculated as per the pin code of your delivery location.</p>

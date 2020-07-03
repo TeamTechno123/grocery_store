@@ -55,7 +55,7 @@ $page = "make_information_list";
                   ?>
                     <tr>
                       <td><?php echo $i; ?></td>
-                      <td><?php echo $customer_info[0]['customer_fname'].' '.$customer_info[0]['customer_lname']; ?></td>
+                      <td><?php if($customer_info){ echo $customer_info[0]['customer_fname'].' '.$customer_info[0]['customer_lname'];} ?></td>
                       <td><?php echo $list->order_upl_date; ?></td>
                       <td>
                         <?php if($list->order_upl_status == 0){

@@ -55,7 +55,7 @@ class Payment extends CI_Controller{
       foreach ($this->cart->contents() as $items) {
         $gst_amt = $gst_amt + $items['product_gst_amt'];
       }
-      $order_data = $coupon_amt = $this->session->userdata('order_data');
+      $order_data = $this->session->userdata('order_data');
       $order_id = $this->User_Model->save_data('order_tbl', $order_data);
 
       foreach ($this->cart->contents() as $items) {
