@@ -59,6 +59,20 @@ h1 , h4, h2, h3, h5, p {
   color: #000!important;
 }
 
+
+
+
+
+
+.navbar-toggler {
+    padding: .25rem .25rem !important;
+    font-size: 1.25rem;
+    line-height: 1;
+    background-color: transparent;
+    border: 1px solid red !important;
+    border-radius: .25rem;
+}
+
 .top-head{
   padding-top: 10px;
 }

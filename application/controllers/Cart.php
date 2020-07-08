@@ -10,6 +10,35 @@ class Cart extends CI_Controller{
     // $this->load->model('Transaction_Model');
   }
 
+  public function add_to_wishlist(){
+    $customer_id = $this->session->userdata('eco_cust_id');
+    if(!$customer_id){
+      $result['code'] = 1;
+      $result['msg'] = 'Please Login First';
+    } else{
+      $product_id = $this->input->post('product_id');
+
+      $wishlist_info = $this->User_Model->get_info_arr2_fields('wishlist_id', 'product_id', $product_id, 'customer_id', $customer_id, '', '', 'wishlist');
+      if($wishlist_info){
+        $result['code'] = 1;
+        $result['msg'] = 'Product Already Exist in Wishlist';
+      } else{
+        $save_data['customer_id'] = $customer_id;
+        $save_data['product_id'] = $product_id;
+        $this->User_Model->save_data('wishlist', $save_data);
+        $result['code'] = 2;
+        $result['msg'] = 'Product Added to Wishlist Successfully';
+      }
+    }
+    echo json_encode($result);
+  }
+
+  public function remove_from_wishlist(){
+    $wishlist_id = $this->input->post('wishlist_id');
+    $this->User_Model->delete_info('wishlist_id', $wishlist_id, 'wishlist');
+    $result = 'Product Removed from Wishlist';
+    echo $result;
+  }
 
   public function add_to_cart(){
     // $this->cart->destroy();
@@ -181,7 +210,7 @@ class Cart extends CI_Controller{
       $gst_amt = $gst_amt + $items['product_gst_amt'];
     }
 
-    $output .='        
+    $output .='
         <tr>
           <td colspan="2" class="text-right text-bold">Total</td>
           <td  colspan="1" class="text-left cart_total text-bold">&#8377;'.$this->cart->total().'</td>
@@ -192,7 +221,7 @@ class Cart extends CI_Controller{
 
     $row_count = count($this->cart->contents());
 
-    if($this->cart->total() >= 999){
+    if($this->cart->total() >= 799){
       $shipping_amt = 0;
     } else{
       $shipping_amt = 100;
@@ -272,7 +301,7 @@ class Cart extends CI_Controller{
     $eco_cust_id = $this->session->userdata('eco_cust_id');
     $today = date('d-m-Y');
     $cart_total = $this->cart->total();
-    if($cart_total >= 999){ $shipping_amt = 0;  }
+    if($cart_total >= 799){ $shipping_amt = 0;  }
     else{ $shipping_amt = 100; }
     $cart_total = $cart_total + $shipping_amt;
 
@@ -347,7 +376,7 @@ class Cart extends CI_Controller{
     $chk_redeem_point = $_POST['chk_redeem_point'];
     $cart_total = $this->cart->total();
 
-    if($cart_total >= 999){ $shipping_amt = 0;  }
+    if($cart_total >= 799){ $shipping_amt = 0;  }
     else{ $shipping_amt = 100; }
     $cart_total = $cart_total + $shipping_amt;
 
@@ -399,6 +428,7 @@ class Cart extends CI_Controller{
     $order_data['order_cust_pin'] = $this->input->post('customer_pin');
     $order_data['order_cust_mob'] = $this->input->post('customer_mobile');
     $order_data['order_cust_email'] = $this->input->post('customer_email');
+    $order_data['order_timeslot'] = $this->input->post('order_timeslot');
 
     $order_data['order_no'] = $this->User_Model->get_count_no('order_no', 'order_tbl');
     $order_data['order_date'] = date('d-m-Y');
@@ -425,7 +455,7 @@ class Cart extends CI_Controller{
     if (!$coupon_amt) {  $coupon_amt = 0;  }
     if (!$wallet_point_used) {  $wallet_point_used = 0;  }
 
-    if($cart_total >= 999){ $shipping_amt = 0;  }
+    if($cart_total >= 799){ $shipping_amt = 0;  }
     else{ $shipping_amt = 100; }
 
     if(!$final_payment_amt){

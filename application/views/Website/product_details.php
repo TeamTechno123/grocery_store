@@ -49,6 +49,7 @@
                 <input type="number" id="product_qty" class="quantity form-control mb-3 mx-2 text-center col-4 col-md-2 pro_det_qrt" name="quantity" value="1">
                 <button type="button" id="btn_Q_plus" class="btn btn-sm btn-outline-secondary mb-3 col-3 col-md-1 "><i class="fa fa-plus"></i></button>
                 <button type="button" id="btn_add_to_cart" class="btn btn-sm btn-success mb-3 col-12 col-md-4 ml-2">Add To Cart</button>
+                <button type="button" id="add_to_wishlist" class="btn btn-sm btn-success mb-3 col-12 col-md-2 ml-1 bg-red" title="Add To Wishlist"><i class="fa fa-heart"></i></button>
               </div>
               <?php
               $product_id = $product_info['product_id'];
@@ -297,7 +298,28 @@ imageZoom("myimage", "myresult");
       });
     }
     // alert(product_price);
-  })
+  });
+
+  // Add To Wishlist...
+  $('#add_to_wishlist').on('click',function(){
+    var product_id = $('.attr-selected').find("input").attr("product_id");
+    $.ajax({
+      url:base_url+'Cart/add_to_wishlist',
+      type: 'POST',
+      data: {
+             "product_id":product_id,
+            },
+      context: this,
+      success: function(result){
+        var data = JSON.parse(result);
+        if(data['code'] == 2){
+          toastr.success(data['msg']);
+        } else{
+          toastr.error(data['msg']);
+        }
+      }
+    });
+  });
 
 
 

@@ -42,6 +42,16 @@ class Website_Model extends CI_Model{
     return $result;
   }
 
+  public function wishlist($customer_id){
+    $this->db->select('product.*, wishlist.wishlist_id');
+    $this->db->from('product');
+    $this->db->where('wishlist.customer_id',$customer_id);
+    $this->db->join('wishlist','wishlist.product_id = product.product_id', 'LEFT');
+    $query = $this->db->get();
+    $result = $query->result();
+    return $result;
+  }
+
   public function product_list_by_category($category_id){
     $this->db->select('product.*');
     $this->db->from('product');

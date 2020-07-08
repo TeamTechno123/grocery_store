@@ -118,12 +118,15 @@
                 </div>
               </div>
               <div class="text-center mt-2">
-                <a class="btn btn-secondary btn-sm add_to_cart w-100 bg-red">Add To Cart <i class="fa fa-shopping-cart"></i></a>
+                <div class="row">
+                  <a class="btn btn-secondary btn-sm add_to_cart bg-red col-9">Add To Cart <i class="fa fa-shopping-cart"></i></a>
+                  <a class="btn btn-secondary btn-sm add_to_wishlist bg-red  col-3" title="Add To Wishlist"><i class="fa fa-heart"></i></a>
+                </div>
               </div>
             </div>
           </div>
         </div>
-          <?php } ?>
+        <?php } ?>
       </div>
     </div>
   </div>

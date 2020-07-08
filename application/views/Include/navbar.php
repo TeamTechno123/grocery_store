@@ -189,6 +189,12 @@
                 <p>Store</p>
               </a>
             </li>
+            <li class="nav-item">
+              <a href="<?php echo base_url(); ?>Master/timeslot" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Timeslot</p>
+              </a>
+            </li>
             <!-- <li class="nav-item">
               <a href="<?php echo base_url(); ?>Master/shipping_list" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
@@ -402,12 +408,12 @@
           <p>Membership Approval</p>
         </a>
       </li>
-      <li class="nav-item">
+      <!-- <li class="nav-item">
         <a href="<?php echo base_url(); ?>User/sales_exec_location_list" class="nav-link">
           <i class="nav-icon fas fa-map-marker-alt"></i>
           <p>Sales Executive Location</p>
         </a>
-      </li>
+      </li> -->
     <?php } ?>
     <!-- Delivery Boy Order List -->
     <?php if($eco_role_id == 7){ ?>

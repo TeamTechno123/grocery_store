@@ -234,7 +234,7 @@ class Website extends CI_Controller{
     if($eco_cust_id == '' || $eco_cust_login == ''){ header('location:'.base_url().'Login'); }
     $row_count = count($this->cart->contents());
     if($row_count == 0){ header('location:'.base_url().''); }
-    $data['page_name'] = "Checkout";
+    $data['page_name'] = "Cart";
 
     $point_add_cnt = $this->User_Model->get_sum('','point_add_cnt','customer_id',$eco_cust_id,'','','point_add');
     $point_use_cnt = $this->User_Model->get_sum('','point_use_cnt','customer_id',$eco_cust_id,'point_use_status','1','point_use');
@@ -245,6 +245,8 @@ class Website extends CI_Controller{
     $data['country_list'] = $this->User_Model->get_list2('country_name','ASC','country');
     $data['state_list'] = $this->User_Model->get_list_by_id2('state_id, country_id, state_name','','','state');
     $data['city_list'] = $this->User_Model->get_list_by_id2('district_id as city_id , state_id, district_name as city_name','','','district');
+    $data['timeslot_list'] = $this->User_Model->get_list_by_id3('timeslot_status','1','','','','','timeslot_id','DESC','timeslot');
+    $data['delivery_address_list'] = $this->User_Model->get_list_by_id3('customer_id',$eco_cust_id,'','','','','address_id','DESC','delivery_address');
     $this->load->view('Website/checkout', $data);
   }
 
@@ -327,7 +329,7 @@ class Website extends CI_Controller{
   public function privacy(){
     $this->load->view('Website/privacy');
   }
-  public function return(){
+  public function return1(){
     $this->load->view('Website/return');
   }
   public function category(){
@@ -459,6 +461,18 @@ class Website extends CI_Controller{
   }
 
 /************************************************* Profile ************************************/
+// Profile Details...
+public function wishlist(){
+  $eco_cust_id = $this->session->userdata('eco_cust_id');
+  $eco_cust_login = $this->session->userdata('eco_cust_login');
+  if($eco_cust_id == '' || $eco_cust_login == ''){ header('location:'.base_url().'Login'); }
+
+
+
+  $data['product_list'] = $this->Website_Model->wishlist($eco_cust_id);
+
+  $this->load->view('Website/wishlist', $data);
+}
 
   // Profile Details...
   public function profile(){
@@ -533,8 +547,72 @@ class Website extends CI_Controller{
     $data['country_list'] = $this->User_Model->get_list2('country_name','ASC','country');
     $data['state_list'] = $this->User_Model->get_list_by_id2('state_id, country_id, state_name','','','state');
     $data['city_list'] = $this->User_Model->get_list_by_id2('district_id as city_id , state_id, district_name as city_name','','','district');
+
+    $data['delivery_address_list'] = $this->User_Model->get_list_by_id2('*','customer_id',$eco_cust_id,'delivery_address');
     $this->load->view('Website/edit_address', $data);
   }
+
+  public function add_delivery_address(){
+    $eco_cust_id = $this->session->userdata('eco_cust_id');
+    $eco_cust_login = $this->session->userdata('eco_cust_login');
+    if($eco_cust_id == '' || $eco_cust_login == ''){ header('location:'.base_url().'Login'); }
+    $save_data = $_POST;
+    $save_data['customer_id'] = $eco_cust_id;
+    $delivery_address_id = $this->User_Model->save_data('delivery_address', $save_data);
+
+    $is_default = $this->input->post('is_default');
+    if(isset($is_default)){
+      $up_data1['is_default'] = 0;
+      $this->User_Model->update_info('customer_id', $eco_cust_id, 'delivery_address', $up_data1);
+      $up_data2['is_default'] = 1;
+      $this->User_Model->update_info('address_id', $delivery_address_id, 'delivery_address', $up_data2);
+    }
+
+    $this->session->set_flashdata('save_success','success');
+    header('location:'.base_url().'Edit-Address');
+  }
+
+  public function edit_delivery_address($address_id){
+    $eco_cust_id = $this->session->userdata('eco_cust_id');
+    $eco_cust_login = $this->session->userdata('eco_cust_login');
+    if($eco_cust_id == '' || $eco_cust_login == ''){ header('location:'.base_url().'Login'); }
+
+    $delivery_address_info = $this->User_Model->get_info_arr('address_id',$address_id,'delivery_address');
+    if(!$delivery_address_info){ header('location:'.base_url().'Master/timeslot'); }
+    $data['update'] = 'update';
+    $data['update_delivery_address'] = 'update';
+    $data['delivery_address_info'] = $delivery_address_info[0];
+
+    $data['country_list'] = $this->User_Model->get_list2('country_name','ASC','country');
+    $data['state_list'] = $this->User_Model->get_list_by_id2('state_id, country_id, state_name','','','state');
+    $data['city_list'] = $this->User_Model->get_list_by_id2('district_id as city_id , state_id, district_name as city_name','','','district');
+
+    $data['delivery_address_list'] = $this->User_Model->get_list_by_id2('*','customer_id',$eco_cust_id,'delivery_address');
+    $this->load->view('Website/edit_address', $data);
+
+  }
+
+  public function update_delivery_address(){
+    $eco_cust_id = $this->session->userdata('eco_cust_id');
+    $eco_cust_login = $this->session->userdata('eco_cust_login');
+    if($eco_cust_id == '' || $eco_cust_login == ''){ header('location:'.base_url().'Login'); }
+    $update_data = $_POST;
+    $address_id = $_POST['address_id'];
+    $this->User_Model->update_info('address_id', $address_id, 'delivery_address', $update_data);
+
+    $is_default = $this->input->post('is_default');
+    if(isset($is_default)){
+      $up_data1['is_default'] = 0;
+      $this->User_Model->update_info('customer_id', $eco_cust_id, 'delivery_address', $up_data1);
+      $up_data2['is_default'] = 1;
+      $this->User_Model->update_info('address_id', $address_id, 'delivery_address', $up_data2);
+    }
+
+    $this->session->set_flashdata('update_success','success');
+    header('location:'.base_url().'Edit-Address');
+  }
+
+
 
 
 

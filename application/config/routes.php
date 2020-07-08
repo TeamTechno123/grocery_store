@@ -74,6 +74,8 @@ $route['Checkout'] = 'Website/checkout';
 $route['Profile'] = 'Website/profile';
 $route['Edit-Profile'] = 'Website/edit_profile';
 $route['Edit-Address'] = 'Website/edit_address';
+$route['Edit-Delivery-Address/(:any)'] = 'Website/edit_delivery_address/$1';
+$route['Wishlist'] = 'Website/wishlist';
 
 $route['My-Orders'] = 'Website/my_orders';
 $route['Order-Details/(:any)'] = 'Website/order_details/$1';

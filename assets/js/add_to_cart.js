@@ -116,3 +116,42 @@
       });
     }
   });
+
+
+  // Add To Wishlist...
+  $('.product_item .add_to_wishlist').on('click',function(){
+    var product_id = $(this).closest('.card-body').find('.select_product_attr').find("option:selected").attr("product_id");
+    $.ajax({
+      url:base_url+'Cart/add_to_wishlist',
+      type: 'POST',
+      data: {
+             "product_id":product_id,
+            },
+      context: this,
+      success: function(result){
+        var data = JSON.parse(result);
+        if(data['code'] == 2){
+          toastr.success(data['msg']);
+        } else{
+          toastr.error(data['msg']);
+        }
+      }
+    });
+  });
+
+  // Add To Wishlist...
+  $('.product_item .remove_from_wishlist').on('click',function(){
+    var wishlist_id = $(this).closest('.card-body').find('.select_product_attr').find("option:selected").attr("wishlist_id");
+    $.ajax({
+      url:base_url+'Cart/remove_from_wishlist',
+      type: 'POST',
+      data: {
+             "wishlist_id":wishlist_id,
+            },
+      context: this,
+      success: function(result){
+        toastr.error(result);
+        $(this).closest('.block_pro').addClass('d-none');
+      }
+    });
+  });

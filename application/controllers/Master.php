@@ -199,8 +199,21 @@ class Master extends CI_Controller{
       unset($save_data['peyment_ref_no']);
       $eco_cust_id = $this->User_Model->save_data('customer', $save_data);
 
-      $today = date('d-m-Y');
+      // Save Delivery Address.
+      $address_data = array(
+        'customer_id' => $eco_cust_id,
+        'address_title' => 'Default Address',
+        'is_default' => 1,
+        'address' => $this->input->post('customer_address'),
+        'country_id' => $this->input->post('country_id'),
+        'state_id' => $this->input->post('state_id'),
+        'city_id' => $this->input->post('city_id'),
+        'pincode' => $this->input->post('customer_pin'),
+      );
+      $this->User_Model->save_data('delivery_address', $address_data);
 
+      // Membership...
+      $today = date('d-m-Y');
       $mem_sch_id = $_POST['mem_sch_id'];
       if($mem_sch_id){
         $membership_info = $this->User_Model->get_info_arr2_fields('*', 'mem_sch_id', $mem_sch_id, '', '', '', '', 'membership_scheme');
@@ -1930,4 +1943,79 @@ class Master extends CI_Controller{
       $this->load->view('User/store', $data);
       $this->load->view('Include/footer', $data);
     }
+
+/*************************************** Timeslot ***********************************/
+  // Add Timeslot...
+  public function timeslot(){
+    $eco_user_id = $this->session->userdata('eco_user_id');
+    $eco_company_id = $this->session->userdata('eco_company_id');
+    $eco_role_id = $this->session->userdata('eco_role_id');
+    if($eco_user_id == '' || $eco_company_id == ''){ header('location:'.base_url().'User'); }
+
+    $this->form_validation->set_rules('timeslot_start_time', 'Timeslot Name', 'trim|required');
+    if ($this->form_validation->run() != FALSE) {
+      $timeslot_status = $this->input->post('timeslot_status');
+      if(!isset($timeslot_status)){ $timeslot_status = '1'; }
+      $save_data = $_POST;
+      $save_data['timeslot_status'] = $timeslot_status;
+      $save_data['company_id'] = $eco_company_id;
+      $save_data['timeslot_addedby'] = $eco_user_id;
+      $user_id = $this->User_Model->save_data('timeslot', $save_data);
+
+      $this->session->set_flashdata('save_success','success');
+      header('location:'.base_url().'Master/timeslot');
+    }
+
+    $data['timeslot_list'] = $this->User_Model->get_list_by_id3('','','','','','','timeslot_id','DESC','timeslot');
+    $this->load->view('Include/head', $data);
+    $this->load->view('Include/navbar', $data);
+    $this->load->view('User/timeslot', $data);
+    $this->load->view('Include/footer', $data);
+  }
+
+  // Edit/Update Timeslot...
+  public function edit_timeslot($timeslot_id){
+    $eco_user_id = $this->session->userdata('eco_user_id');
+    $eco_company_id = $this->session->userdata('eco_company_id');
+    $eco_role_id = $this->session->userdata('eco_role_id');
+    if($eco_user_id == '' || $eco_company_id == ''){ header('location:'.base_url().'User'); }
+
+    $this->form_validation->set_rules('timeslot_start_time', 'Timeslot Name', 'trim|required');
+    if ($this->form_validation->run() != FALSE) {
+      $timeslot_status = $this->input->post('timeslot_status');
+      if(!isset($timeslot_status)){ $timeslot_status = '1'; }
+      $update_data = $_POST;
+      $update_data['timeslot_status'] = $timeslot_status;
+      $update_data['timeslot_addedby'] = $eco_user_id;
+      $this->User_Model->update_info('timeslot_id', $timeslot_id, 'timeslot', $update_data);
+
+      $this->session->set_flashdata('update_success','success');
+      header('location:'.base_url().'Master/timeslot');
+    }
+
+    $timeslot_info = $this->User_Model->get_info_arr('timeslot_id',$timeslot_id,'timeslot');
+    if(!$timeslot_info){ header('location:'.base_url().'Master/timeslot'); }
+    $data['update'] = 'update';
+    $data['update_timeslot'] = 'update';
+    $data['timeslot_info'] = $timeslot_info[0];
+    $data['act_link'] = base_url().'Master/edit_timeslot/'.$timeslot_id;
+
+
+    $data['timeslot_list'] = $this->User_Model->get_list_by_id3('','','','','','','timeslot_id','DESC','timeslot');
+    $this->load->view('Include/head', $data);
+    $this->load->view('Include/navbar', $data);
+    $this->load->view('User/timeslot', $data);
+    $this->load->view('Include/footer', $data);
+  }
+
+  // Delete Timeslot...
+  public function delete_timeslot($timeslot_id){
+    $eco_user_id = $this->session->userdata('eco_user_id');
+    $eco_company_id = $this->session->userdata('eco_company_id');
+    $eco_role_id = $this->session->userdata('eco_role_id');
+    if($eco_user_id == '' || $eco_company_id == ''){ header('location:'.base_url().'User'); }
+    $this->User_Model->delete_info('timeslot_id', $timeslot_id, 'timeslot');
+    $this->session->set_flashdata('delete_success','success');
+    header('location:'.base_url().'Master/timeslot');
+  }
 }

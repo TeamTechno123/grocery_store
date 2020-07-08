@@ -35,6 +35,7 @@ class Product extends CI_Controller{
 
       $this->form_validation->set_rules('category_name', 'Name', 'trim|required');
       if ($this->form_validation->run() != FALSE) {
+
         $show_on_home = $this->input->post('show_on_home');
         if(!isset($show_on_home)){ $show_on_home = 0; }
         $category_status = $this->input->post('category_status');
@@ -56,11 +57,10 @@ class Product extends CI_Controller{
           'category_addedby' => $eco_user_id,
           'is_main' => $is_main,
           'main_category_id' => $main_category_id,
-
         );
         $category_id = $this->User_Model->save_data('category', $save_data);
 
-        if(isset($_FILES['category_img']['name'])){
+        if($_FILES['category_img']['name']){
            $time = time();
            $image_name = 'category_'.$category_id.'_'.$time;
            $config['upload_path'] = 'assets/images/category/';
@@ -80,10 +80,13 @@ class Product extends CI_Controller{
              $error = $this->upload->display_errors();
              $this->session->set_flashdata('upload_status',$this->upload->display_errors());
            }
-         }
+        }
 
-         $notification = 'New Product Category Added'.$_POST['category_name'].'';
-         $this->send_notification($notification);
+        $notification = 'New Category Added '.$_POST['category_name'];
+        $notification_data['notification_text'] = $notification;
+        $this->User_Model->save_data('notification', $notification_data);
+
+        $this->send_notification($notification);
 
         $this->session->set_flashdata('save_success','success');
         header('location:'.base_url().'Product/category_list');
@@ -94,6 +97,45 @@ class Product extends CI_Controller{
       $this->load->view('Product/category', $data);
       $this->load->view('Include/footer', $data);
     }
+
+
+     public function send_notification($notification){
+        $customer_list = $this->User_Model->get_list_by_id2('device_id','device_id !=','','customer');
+        $device_id = array();
+        foreach ($customer_list as $customer_list1) {
+            array_push($device_id, $customer_list1->device_id);
+        }
+
+        $msg = array(
+            'body'  => 'Needs On Door',
+            'title' => $notification,
+            'icon'  => 'myicon',/*Default Icon*/
+            'sound' => 'mySound'/*Default sound*/
+        );
+
+        $fields = array(
+            'registration_ids' => $device_id,
+            'notification'  => $msg
+        );
+
+        //building headers for the request
+        $headers = array(
+            'Authorization: key = AAAARI6VoJk:APA91bEGmp0K5SlbMwRyZtUf_X-MlFYdWjsBnQ0FHNy69zEweJ_ZQJQjD4Gu84DUJ1QgqRXRAxF-JiVeayYcd7Byt5eABihEGXARQrviCzEC6hwvVcI3tes5ORMKNH-QB077C84nVvru',
+            'Content-Type: application/json'
+        );
+        $ch = curl_init();
+        curl_setopt( $ch,CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send' );
+        curl_setopt( $ch,CURLOPT_POST, true );
+        curl_setopt( $ch,CURLOPT_HTTPHEADER, $headers );
+        curl_setopt( $ch,CURLOPT_RETURNTRANSFER, true );
+        curl_setopt( $ch,CURLOPT_SSL_VERIFYPEER, false );
+        curl_setopt( $ch,CURLOPT_POSTFIELDS, json_encode( $fields ) );
+        $result = curl_exec($ch );
+        curl_close( $ch );
+        // echo $result;
+    }
+
+
 
     // Edit Category...
     public function edit_category($category_id){
@@ -259,9 +301,13 @@ class Product extends CI_Controller{
           }
         }
 
-        $notification = 'New Product Added'.$_POST['product_name'].'';
+        // Notification...
+        $notification = 'New Product Added'.$_POST['product_name'];
+        $notification_data['notification_text'] = $notification;
+        $this->User_Model->save_data('notification', $notification_data);
         $this->send_notification($notification);
 
+        $this->session->set_flashdata('save_success','success');
         header('location:'.base_url().'Product/product_list');
       }
 
@@ -650,38 +696,5 @@ class Product extends CI_Controller{
 
 /***************************************************************************************************************/
 
-  public function send_notification($notification){
-    $customer_list = $this->User_Model->get_list_by_id2('device_id','device_id !=','','customer');
-    if($customer_list){
-      $device_id = array();
-      foreach ($customer_list as $customer_list1) {
-        array_push($device_id, $customer_list1->device_id);
-      }
-      // Push Notification...
-      $content = array(
-         "en" => $notification;
-      );
-      $fields = array(
-        'app_id' => "a9f8e2a8-1fdf-4488-9a96-8d43c562c56a",
-        'include_player_ids' => $device_id,
-        'data' => array("msg" => "Comment Added Successfully"),
-        'contents' => $content
-      );
-      $fields = json_encode($fields);
-      $ch = curl_init();
-      curl_setopt($ch, CURLOPT_URL, "https://onesignal.com/api/v1/notifications");
-      curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json; charset=utf-8',
-                             'Authorization: Basic ZjJkZWJkM2YtMDQ0Yy00NTAyLWE5Y2QtMTBlZjVmYzMyMDgw'));
-      curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-      curl_setopt($ch, CURLOPT_HEADER, FALSE);
-      curl_setopt($ch, CURLOPT_POST, TRUE);
-      curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
-      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-      $resp = curl_exec($ch);
-      curl_close($ch);
-    }
 
-    $notification_data['notification_text'] = $notification;
-    $this->User_Model->save_data('notification', $notification_data);
-  }
 }

@@ -11,6 +11,8 @@
     <hr class="my-2">
     <h5><a class="text-white" href="<?php echo base_url(); ?>My-Membership">My Membership</a></h5>
     <hr class="my-2">
+    <h5><a class="text-white" href="<?php echo base_url(); ?>Wishlist">My Wishlist</a></h5>
+    <hr class="my-2">
     <h5><a class="text-white" href="<?php echo base_url(); ?>Website/order">My Gift Card</a></h5>
   <!-- <ul class="px-2" style="list-style-type:none;">
     <li>

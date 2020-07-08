@@ -41,7 +41,7 @@ class Payment extends CI_Controller{
       if (!$coupon_amt) {  $coupon_amt = 0;  }
       if (!$wallet_point_used) {  $wallet_point_used = 0;  }
 
-      if($cart_total >= 999){ $shipping_amt = 0;  }
+      if($cart_total >= 799){ $shipping_amt = 0;  }
       else{ $shipping_amt = 100; }
 
       if(!$final_payment_amt){

@@ -137,7 +137,11 @@
           </div>
           <div class="col-2">
             <div class=" head-shopping-cart ml-2 mt-2">
-              <a href="#" class="text-success" data-toggle="modal" data-target="#myCart"><i class="fa m-f10 text-green fa-shopping-cart "><span class="badge badge-notify my-cart-badge">0</span></i></a>
+              <?php if(isset($page_name) && $page_name == 'Cart'){ ?>
+                <a class="text-success" ><i class="fa m-f10 text-green fa-shopping-cart "><span class="badge badge-notify my-cart-badge">0</span></i></a>
+              <?php } else{ ?>
+                <a href="#" class="text-success" data-toggle="modal" data-target="#myCart"><i class="fa m-f10 text-green fa-shopping-cart "><span class="badge badge-notify my-cart-badge">0</span></i></a>
+              <?php } ?>
             </div>
           </div>
         </div>
@@ -196,7 +200,7 @@
         <div class="col-3">
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon">
-              <i class="fas text-white fa-bars bar3 pt-2"></i>
+              <i class="fas text-danger fa-bars bar3 pt-2"></i>
             </span>
           </button>
         </div>

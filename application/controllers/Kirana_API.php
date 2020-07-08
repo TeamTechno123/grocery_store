@@ -114,18 +114,21 @@ class Kirana_API extends CI_Controller{
   public function sign_in(){
     $mobile_no = $_REQUEST['mobile_no'];
     $password = $_REQUEST['password'];
+    $device_id = $_REQUEST['device_id'];
 
-    $login = $this->Website_Model->check_login($mobile_no, $password);
+    $login = $this->API_Model->check_login($mobile_no, $password);
     if($login == null){
       $response["status"] = FALSE;
       $response["msg"] = "Invalid Mobile No. or Password";
     } else{
+      $customer_id = $login[0]['customer_id'];
+      $up_data['device_id'] = $device_id;
+      $this->User_Model->update_info('customer_id', $customer_id, 'customer', $up_data);
       $response["status"] = TRUE;
       $response["msg"] = "Login Successfull";
       $response["customer_id"] = $login[0]['customer_id'];
       $response["customer_fname"] = $login[0]['customer_fname'];
       $response["customer_lname"] = $login[0]['customer_lname'];
-      // $response["customer_details"] = $login[0];
     }
 
     $json_response = json_encode($response,JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
@@ -169,7 +172,69 @@ class Kirana_API extends CI_Controller{
     echo str_replace('\\/','/',$json_response);
   }
 
+/****************************************** Wishlist *************************************/
+
+  // Add Wishlist...
+  public function add_to_wishlist(){
+    $customer_id = $_REQUEST['customer_id'];
+    $product_id = $_REQUEST['product_id'];
+
+    $wishlist_info = $this->User_Model->get_info_arr2_fields('wishlist_id', 'product_id', $product_id, 'customer_id', $customer_id, '', '', 'wishlist');
+    if($wishlist_info){
+      $response["status"] = FALSE;
+      $response['msg'] = 'Product Already Exist in Wishlist';
+    } else{
+      $save_data['customer_id'] = $customer_id;
+      $save_data['product_id'] = $product_id;
+      $this->User_Model->save_data('wishlist', $save_data);
+
+      $response["status"] = TRUE;
+      $response['msg'] = 'Product Added to Wishlist Successfully';
+    }
+    $json_response = json_encode($response,JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+    echo str_replace('\\/','/',$json_response);
+  }
+  // WishList...
+  public function wishlist(){
+    $customer_id = $_REQUEST['customer_id'];
+    $product_list = $this->Website_Model->wishlist($customer_id);
+    if ($product_list) {
+      foreach ($product_list as $product_list1) {
+        $product_id = $product_list1->product_id;
+        $product_attribute_list = $this->API_Model->product_attribute_list($product_id);
+        // $product_attribute_list = $this->User_Model->get_list_by_id_fields('pro_attri_id, product_id, pro_attri_weight, pro_attri_mrp, pro_attri_price, pro_attri_dis_per, pro_attri_dis_amt','pro_attri_status',1,'product_id',$product_id,'','','pro_attri_id','ASC','product_attribute');
+
+        $product_list1->product_attribute_list = $product_attribute_list;
+        $product_img_list = $this->User_Model->get_list_by_id_fields('product_images_id, product_images_name','product_id',$product_id,'','','','','product_images_id','ASC','product_images');
+        $product_list1->product_img_list = $product_img_list;
+      }
+      $response["status"] = TRUE;
+      $response["img_path"] = base_url().'assets/images/product/';
+      $response["product_list"] = $product_list;
+    } else {
+      $response["status"] = FALSE;
+      $response["img_path"] = base_url().'assets/images/product/';
+      $response["product_list"] = $product_list;
+    }
+    $json_response = json_encode($response,JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+    echo str_replace('\\/','/',$json_response);
+  }
+
 /********************************************* Get List ****************************************/
+  public function notification_list(){
+    $notification_list = $this->User_Model->get_list2('notification_id','DESC','notification');
+    if($notification_list){
+      $response["status"] = TRUE;
+      $response["notification_list"] = $notification_list;
+    } else{
+      $response["status"] = FALSE;
+      $response["notification_list"] = $notification_list;
+    }
+
+    $json_response = json_encode($response,JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+    echo str_replace('\\/','/',$json_response);
+  }
+
   // Country List...
   public function country_list(){
     $country_list = $this->User_Model->get_list2('country_name','ASC','country');
@@ -1011,7 +1076,79 @@ class Kirana_API extends CI_Controller{
   }
 
 
-/********************************************* Admin ***********************************/
+/********************************************* Delivery Address ***********************************/
+
+  // Add Delivery Address...
+  public function add_delivery_address(){
+    $save_data['customer_id'] = $_REQUEST['customer_id'];
+    $save_data['address_title'] = $_REQUEST['address_title'];
+    $save_data['address'] = $_REQUEST['address'];
+    $save_data['country_id'] = $_REQUEST['country_id'];
+    $save_data['state_id'] = $_REQUEST['state_id'];
+    $save_data['city_id'] = $_REQUEST['city_id'];
+    $save_data['pincode'] = $_REQUEST['pincode'];
+
+    $address_id = $this->User_Model->save_data('delivery_address', $save_data);
+    if ($address_id) {
+      $response["status"] = TRUE;
+      $response["msg"] = "Address Saved Successfuly";
+    } else {
+      $response["status"] = FALSE;
+      $response["msg"] = "Address Not Saved";
+    }
+    $json_response = json_encode($response,JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+    echo str_replace('\\/','/',$json_response);
+  }
+
+  // Update Delivery Address...
+  public function update_delivery_address(){
+    $address_id = $_REQUEST['address_id'];
+    $update_data['address_title'] = $_REQUEST['address_title'];
+    $update_data['address'] = $_REQUEST['address'];
+    $update_data['country_id'] = $_REQUEST['country_id'];
+    $update_data['state_id'] = $_REQUEST['state_id'];
+    $update_data['city_id'] = $_REQUEST['city_id'];
+    $update_data['pincode'] = $_REQUEST['pincode'];
+
+    $this->User_Model->update_info('address_id', $address_id, 'delivery_address', $update_data);
+
+    $response["status"] = TRUE;
+    $response["msg"] = "Address Updated Successfuly";
+    $json_response = json_encode($response,JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+    echo str_replace('\\/','/',$json_response);
+  }
+
+  // Delete Delivery Address...
+  public function delete_delivery_address(){
+    $address_id = $_REQUEST['address_id'];
+    $address_data = $this->User_Model->get_info_arr2_fields('address_id', 'address_id', $address_id, 'is_default', 1, '', '', 'delivery_address');
+    if($address_data){
+      $response["status"] = FALSE;
+      $response["msg"] = "Can not delete default address";
+    } else{
+      $this->User_Model->delete_info('address_id', $address_id, 'delivery_address');
+      $response["status"] = TRUE;
+      $response["msg"] = "Address Deleted Successfuly";
+    }
+    $json_response = json_encode($response,JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+    echo str_replace('\\/','/',$json_response);
+  }
+
+  // Make Default Address...
+  public function default_delivery_address(){
+    $customer_id = $_REQUEST['customer_id'];
+    $address_id = $_REQUEST['address_id'];
+
+    $up_data1['is_default'] = 0;
+    $this->User_Model->update_info('customer_id', $customer_id, 'delivery_address', $up_data1);
+    $up_data2['is_default'] = 1;
+    $this->User_Model->update_info('address_id', $address_id, 'delivery_address', $up_data2);
+    $response["status"] = TRUE;
+    $response["msg"] = "Updated Successfuly";
+
+    $json_response = json_encode($response,JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+    echo str_replace('\\/','/',$json_response);
+  }
 
 
 
@@ -1055,7 +1192,47 @@ class Kirana_API extends CI_Controller{
   }
 
 
+  // Timeslot List...
+  public function timeslot_list(){
+    $timeslot_list = $this->User_Model->get_list_by_id_fields('timeslot_id, timeslot_start_time, timeslot_end_time','timeslot_status','1','','','','','timeslot_id','DESC','timeslot');
+    if($timeslot_list){
+      $response["status"] = TRUE;
+      $response["timeslot_list"] = $timeslot_list;
+    } else{
+      $response["status"] = FALSE;
+      $response["timeslot_list"] = $timeslot_list;
+    }
 
+    $json_response = json_encode($response,JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+    echo str_replace('\\/','/',$json_response);
+  }
+
+
+  // Timeslot List...
+  public function address_list(){
+    $customer_id = $_REQUEST['customer_id'];
+    $address_list = $this->User_Model->get_list_by_id3('customer_id',$customer_id,'','','','','address_id','DESC','delivery_address');
+    foreach ($address_list as $address_list1) {
+      $country_info = $this->User_Model->get_info_arr_fields('country_name','country_id', $address_list1->country_id, 'country');
+      $state_info = $this->User_Model->get_info_arr_fields('state_name','state_id', $address_list1->state_id, 'state');
+      $city_info = $this->User_Model->get_info_arr_fields('district_name as city_name','district_id', $address_list1->city_id, 'district');
+
+      $address_list1->country_name = $country_info[0]['country_name'];
+      $address_list1->state_name = $state_info[0]['state_name'];
+      $address_list1->city_name = $city_info[0]['city_name'];
+    }
+
+    if($address_list){
+      $response["status"] = TRUE;
+      $response["address_list"] = $address_list;
+    } else{
+      $response["status"] = FALSE;
+      $response["address_list"] = $address_list;
+    }
+
+    $json_response = json_encode($response,JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+    echo str_replace('\\/','/',$json_response);
+  }
 
 
 
@@ -1072,17 +1249,18 @@ class Kirana_API extends CI_Controller{
     $save_order_data['customer_id'] = $customer_id;
     $save_order_data['order_cust_fname'] = $_REQUEST['customer_fname'];
     $save_order_data['order_cust_lname'] = $_REQUEST['customer_lname'];
-    $save_order_data['order_cust_addr'] = $_REQUEST['customer_address'];
-    // $save_order_data['order_cust_city'] = $_REQUEST['customer_city'];
-    $save_order_data['city_id'] = $_REQUEST['city_id'];
-    $save_order_data['order_cust_pin'] = $_REQUEST['customer_pin'];
+
+    // $save_order_data['order_cust_addr'] = $_REQUEST['customer_address'];
+    // $save_order_data['city_id'] = $_REQUEST['city_id'];
+    // $save_order_data['order_cust_pin'] = $_REQUEST['customer_pin'];
+
     $save_order_data['order_cust_mob'] = $_REQUEST['customer_mobile'];
     $save_order_data['order_cust_email'] = $_REQUEST['customer_email'];
 
     // $save_order_data['order_amount'] = $_REQUEST['order_amount']; //$cart_total-$gst_amt; // GST is Inclusive...
     // $save_order_data['order_gst'] = $_REQUEST['total_gst_amount']; // Calculate Inclusive GST...
 
-    $save_order_data['order_shipping_amt'] = $_REQUEST['order_shipping_amt']; // Shipping Amount is 100Rs if cart_total < 999Rs.
+    $save_order_data['order_shipping_amt'] = $_REQUEST['order_shipping_amt']; // Shipping Amount is 100Rs if cart_total < 799Rs.
     $save_order_data['order_total_amount'] = $_REQUEST['order_total_amount']; // $cart_total + $shipping_amt;
 
     $save_order_data['order_date'] = date('d-m-Y');
@@ -1090,6 +1268,14 @@ class Kirana_API extends CI_Controller{
     $save_order_data['order_added_date'] = date('d-m-Y h:i:s A');
     $save_order_data['order_addedby'] = 0;
     $save_order_data['order_no'] = $this->User_Model->get_count_no('order_no', 'order_tbl');
+
+    $address_id = $_REQUEST['address_id'];
+    $address_data = $country_info = $this->User_Model->get_info_arr_fields('*','address_id', $address_id, 'delivery_address');
+    $save_order_data['order_cust_addr'] = $address_data[0]['address'];
+    $save_order_data['country_id'] = $address_data[0]['country_id'];
+    $save_order_data['state_id'] = $address_data[0]['state_id'];
+    $save_order_data['city_id'] = $address_data[0]['city_id'];
+    $save_order_data['order_cust_pin'] = $address_data[0]['pincode'];
 
     $order_id = $this->User_Model->save_data('order_tbl', $save_order_data);
 

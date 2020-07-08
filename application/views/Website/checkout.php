@@ -21,6 +21,17 @@
           <h4>Delivery Address</h4>
           <hr class="grey-hr">
         </div>
+        <div class="col-md-12">
+          <h5>Select Delivery Address</h5>
+          <select class="form-control select2 form-control-sm" id="address_id" data-placeholder="Select Delivery Address" required>
+            <?php if(isset($delivery_address_list)){ foreach ($delivery_address_list as $list) { ?>
+            <option <?php if($list->is_default == 1){ echo 'selected'; } ?> value="<?php echo $list->address_id; ?>" address="<?php echo $list->address; ?>" country_id="<?php echo $list->country_id; ?>" state_id="<?php echo $list->state_id; ?>" city_id="<?php echo $list->city_id; ?>" pincode="<?php echo $list->pincode; ?>" ><?php echo $list->address_title; ?></option>
+            <?php } } ?>
+          </select>
+        </div>
+        <div class="col-md-12">
+          <hr class="grey-hr">
+        </div>
         <div class="row">
           <div class="col-md-6">
             <div class="form-group">
@@ -146,6 +157,22 @@
     </div>
 
 <div class="col-md-12 mb-3"><hr></div>
+<div class="col-md-12 mb-3">
+  <h4 class="text-left">Timeslot</h4>
+</div>
+<div class="col-md-6">
+  <div class="form-group">
+    <label for="checkout-fn">Select Timeslot</label>
+    <select class="form-control select2 form-control-sm" name="order_timeslot" id="order_timeslot" data-placeholder="Select Timeslot" required>
+      <option value="">Select Timeslot</option>
+      <?php if(isset($timeslot_list)){ foreach ($timeslot_list as $list) { ?>
+      <option value="<?php echo $list->timeslot_start_time.' To '.$list->timeslot_end_time; ?>" ><?php echo $list->timeslot_start_time.' To '.$list->timeslot_end_time; ?></option>
+      <?php } } ?>
+    </select>
+  </div>
+</div>
+<div class="col-md-12 mb-3"><hr></div>
+
 
     <div class="col-md-4">
       <div class="card py-3">
@@ -234,6 +261,40 @@
 <!-- If session is Set -->
 
 <script type="text/javascript">
+$(document).ready(function(){
+  var address_id =  $('#address_id').find("option:selected").val();
+  var address =  $('#address_id').find("option:selected").attr('address');
+  var country_id =  $('#address_id').find("option:selected").attr('country_id');
+  var state_id =  $('#address_id').find("option:selected").attr('state_id');
+  var city_id =  $('#address_id').find("option:selected").attr('city_id');
+  var pincode =  $('#address_id').find("option:selected").attr('pincode');
+
+  $('#customer_address').val(address);
+  $('#country_id').val(country_id);
+  $('#state_id').val(state_id);
+  $('#city_id').val(city_id);
+  $('#customer_pin').val(pincode);
+});
+
+$("#address_id").on("change", function(){
+  var address_id =  $('#address_id').find("option:selected").val();
+  if(address_id != ''){
+    var address =  $('#address_id').find("option:selected").attr('address');
+    var country_id =  $('#address_id').find("option:selected").attr('country_id');
+    var state_id =  $('#address_id').find("option:selected").attr('state_id');
+    var city_id =  $('#address_id').find("option:selected").attr('city_id');
+    var pincode =  $('#address_id').find("option:selected").attr('pincode');
+
+    $('#customer_address').val(address);
+    $('#country_id').val(country_id);
+    $('#state_id').val(state_id);
+    $('#city_id').val(city_id);
+    $('#customer_pin').val(pincode);
+  } else{
+    location.replace("Checkout");
+  }
+  // alert(address);
+});
 // Check Pincode...
 var customer_pin1 = $('#customer_pin').val();
 $('#customer_pin').on('change',function(){
