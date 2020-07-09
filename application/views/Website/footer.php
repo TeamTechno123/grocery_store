@@ -105,7 +105,7 @@ eval(function(p,a,c,k,e,r){e=function(c){return(c<a?'':e(parseInt(c/a)))+((c=c%a
   <script src="<?php echo base_url(); ?>assets/plugins/inputmask/min/jquery.inputmask.bundle.min.js"></script>
   <script src="<?php echo base_url(); ?>assets/plugins/daterangepicker/daterangepicker.js"></script>
   <!-- Tempusdominus Bootstrap 4 -->
-  <!-- <script src="<?php echo base_url(); ?>assets/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script> -->
+  <script src="<?php echo base_url(); ?>assets/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
   <!-- Summernote -->
   <script src="<?php echo base_url(); ?>assets/plugins/summernote/summernote-bs4.min.js"></script>
   <!-- overlayScrollbars -->
@@ -124,21 +124,26 @@ eval(function(p,a,c,k,e,r){e=function(c){return(c<a?'':e(parseInt(c/a)))+((c=c%a
   <script src="<?php echo base_url(); ?>assets/plugins/sweetalert2/sweetalert2.min.js"></script>
   <script src="<?php echo base_url(); ?>assets/plugins/toastr/toastr.min.js"></script>
 
-  <!-- <script type="text/javascript">
+  <script type="text/javascript">
+  var dateToday = new Date();
+    $('#min_date1').datetimepicker({
+      format: 'DD-MM-YYYY',
+      minDate: dateToday,
+    });
     $('#date1').datetimepicker({
-      format: 'DD-MM-Y'
+      format: 'DD-MM-YYYY'
     });
     $('#date2').datetimepicker({
-      format: 'DD-MM-Y'
+      format: 'DD-MM-YYYY'
     });
     $('#date3').datetimepicker({
-      format: 'DD-MM-Y'
+      format: 'DD-MM-YYYY'
     })
     $('#date4').datetimepicker({
-      format: 'DD-MM-Y'
+      format: 'DD-MM-YYYY'
     })
     $('#date5').datetimepicker({
-      format: 'DD-MM-Y'
+      format: 'DD-MM-YYYY'
     })
     //Timepicker
     $('#timepicker1').datetimepicker({
@@ -157,17 +162,17 @@ eval(function(p,a,c,k,e,r){e=function(c){return(c<a?'':e(parseInt(c/a)))+((c=c%a
       format: 'LT'
     });
 
-    $(function () {
-      // Initialize Select2 Elements
-      $('.select2bs4').select2({
-        theme: 'bootstrap4'
-      });
-      //Initialize Select2 Elements
-      $('.select2').select2();
-      //Bootstrap Duallistbox
-      $('.duallistbox').bootstrapDualListbox();
-    })
-  </script> -->
+    // $(function () {
+    //   // Initialize Select2 Elements
+    //   $('.select2bs4').select2({
+    //     theme: 'bootstrap4'
+    //   });
+    //   //Initialize Select2 Elements
+    //   $('.select2').select2();
+    //   //Bootstrap Duallistbox
+    //   $('.duallistbox').bootstrapDualListbox();
+    // })
+  </script>
 
 
   <script type="text/javascript">

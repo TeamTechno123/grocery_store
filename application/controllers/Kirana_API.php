@@ -181,13 +181,14 @@ class Kirana_API extends CI_Controller{
 
     $wishlist_info = $this->User_Model->get_info_arr2_fields('wishlist_id', 'product_id', $product_id, 'customer_id', $customer_id, '', '', 'wishlist');
     if($wishlist_info){
-      $response["status"] = FALSE;
-      $response['msg'] = 'Product Already Exist in Wishlist';
+      $wishlist_id = $wishlist_info[0]['wishlist_id'];
+      $this->User_Model->delete_info('wishlist_id', $wishlist_id, 'wishlist');
+      $response["status"] = TRUE;
+      $response['msg'] = 'Product Removed from Wishlist';
     } else{
       $save_data['customer_id'] = $customer_id;
       $save_data['product_id'] = $product_id;
       $this->User_Model->save_data('wishlist', $save_data);
-
       $response["status"] = TRUE;
       $response['msg'] = 'Product Added to Wishlist Successfully';
     }
@@ -1088,8 +1089,17 @@ class Kirana_API extends CI_Controller{
     $save_data['city_id'] = $_REQUEST['city_id'];
     $save_data['pincode'] = $_REQUEST['pincode'];
 
+    $is_default = $_REQUEST['is_default'];
+    $customer_id = $_REQUEST['customer_id'];
+
     $address_id = $this->User_Model->save_data('delivery_address', $save_data);
     if ($address_id) {
+      if($is_default == 1){
+        $up_data1['is_default'] = 0;
+        $this->User_Model->update_info('customer_id', $customer_id, 'delivery_address', $up_data1);
+        $up_data2['is_default'] = 1;
+        $this->User_Model->update_info('address_id', $address_id, 'delivery_address', $up_data2);
+      }
       $response["status"] = TRUE;
       $response["msg"] = "Address Saved Successfuly";
     } else {
@@ -1109,8 +1119,17 @@ class Kirana_API extends CI_Controller{
     $update_data['state_id'] = $_REQUEST['state_id'];
     $update_data['city_id'] = $_REQUEST['city_id'];
     $update_data['pincode'] = $_REQUEST['pincode'];
+    $is_default = $_REQUEST['is_default'];
+    $customer_id = $_REQUEST['customer_id'];
 
     $this->User_Model->update_info('address_id', $address_id, 'delivery_address', $update_data);
+
+    if($is_default == 1){
+      $up_data1['is_default'] = 0;
+      $this->User_Model->update_info('customer_id', $customer_id, 'delivery_address', $up_data1);
+      $up_data2['is_default'] = 1;
+      $this->User_Model->update_info('address_id', $address_id, 'delivery_address', $up_data2);
+    }
 
     $response["status"] = TRUE;
     $response["msg"] = "Address Updated Successfuly";
@@ -1195,12 +1214,23 @@ class Kirana_API extends CI_Controller{
   // Timeslot List...
   public function timeslot_list(){
     $timeslot_list = $this->User_Model->get_list_by_id_fields('timeslot_id, timeslot_start_time, timeslot_end_time','timeslot_status','1','','','','','timeslot_id','DESC','timeslot');
+    $i = 0;
+    $list = array();
+    foreach ($timeslot_list as $timeslot_list1) {
+      if(time() < strtotime($timeslot_list1->timeslot_end_time)){
+        $list[$i]['timeslot_id'] = $timeslot_list1->timeslot_id;
+        $list[$i]['timeslot_start_time'] = $timeslot_list1->timeslot_start_time;
+        $list[$i]['timeslot_end_time'] = $timeslot_list1->timeslot_end_time;
+      }
+      $i++;
+    }
+
     if($timeslot_list){
       $response["status"] = TRUE;
-      $response["timeslot_list"] = $timeslot_list;
+      $response["timeslot_list"] = $list;
     } else{
       $response["status"] = FALSE;
-      $response["timeslot_list"] = $timeslot_list;
+      $response["timeslot_list"] = $list;
     }
 
     $json_response = json_encode($response,JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
@@ -1269,6 +1299,8 @@ class Kirana_API extends CI_Controller{
     $save_order_data['order_addedby'] = 0;
     $save_order_data['order_no'] = $this->User_Model->get_count_no('order_no', 'order_tbl');
 
+    $save_order_data['order_timeslot_date'] = $_REQUEST['order_timeslot_date'];
+    $save_order_data['order_timeslot_time'] = $_REQUEST['order_timeslot_time'];
     $address_id = $_REQUEST['address_id'];
     $address_data = $country_info = $this->User_Model->get_info_arr_fields('*','address_id', $address_id, 'delivery_address');
     $save_order_data['order_cust_addr'] = $address_data[0]['address'];

@@ -467,8 +467,6 @@ public function wishlist(){
   $eco_cust_login = $this->session->userdata('eco_cust_login');
   if($eco_cust_id == '' || $eco_cust_login == ''){ header('location:'.base_url().'Login'); }
 
-
-
   $data['product_list'] = $this->Website_Model->wishlist($eco_cust_id);
 
   $this->load->view('Website/wishlist', $data);

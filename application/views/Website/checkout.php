@@ -160,14 +160,27 @@
 <div class="col-md-12 mb-3">
   <h4 class="text-left">Timeslot</h4>
 </div>
-<div class="col-md-6">
+<div class="col-md-4">
+  <div class="form-group">
+    <label for="checkout-fn">Select Date</label>
+    <!-- <div class="input-group date" id="min_date1" data-target-input="nearest"> -->
+      <input type="text" name="order_timeslot_date" id="min_date1" data-target="#min_date1" data-toggle="datetimepicker" class="form-control form-control-sm">
+      <!-- <div class="input-group-append" data-target="#min_date1" data-toggle="datetimepicker">
+          <div class="input-group-text"><i class="far fa-calender"></i></div>
+      </div> -->
+    <!-- </div> -->
+  </div>
+</div>
+<div class="col-md-4">
   <div class="form-group">
     <label for="checkout-fn">Select Timeslot</label>
-    <select class="form-control select2 form-control-sm" name="order_timeslot" id="order_timeslot" data-placeholder="Select Timeslot" required>
+    <select class="form-control select2 form-control-sm" name="order_timeslot_time" id="order_timeslot" data-placeholder="Select Timeslot" required>
       <option value="">Select Timeslot</option>
-      <?php if(isset($timeslot_list)){ foreach ($timeslot_list as $list) { ?>
+      <?php if(isset($timeslot_list)){ foreach ($timeslot_list as $list) {
+        if(time() < strtotime($list->timeslot_start_time)){
+      ?>
       <option value="<?php echo $list->timeslot_start_time.' To '.$list->timeslot_end_time; ?>" ><?php echo $list->timeslot_start_time.' To '.$list->timeslot_end_time; ?></option>
-      <?php } } ?>
+    <?php } } } ?>
     </select>
   </div>
 </div>
@@ -451,4 +464,15 @@ $('#customer_pin').on('change',function(){
     <?php } ?>
 
   });
+
+
 </script>
+
+<!-- DataTables -->
+<!-- <script src="<?php echo base_url(); ?>assets/plugins/datatables/jquery.dataTables.js"></script>
+<script src="<?php echo base_url(); ?>assets/plugins/datatables-bs4/js/dataTables.bootstrap4.js"></script>
+<script type="text/javascript">
+$('#timepicker1').datetimepicker({
+  format: 'LT'
+})
+</script> -->

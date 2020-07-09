@@ -40,6 +40,7 @@
                   <th class="wt_100">Date</th>
                   <th>Customer Name</th>
                   <th class="wt_75">Amount</th>
+                  <th class="">Timeslot</th>
                   <th class="wt_100">Status</th>
                   <th class="wt_75">Payment</th>
                   <th class="wt_75">Action</th>
@@ -55,6 +56,7 @@
                     <td><?php echo $list->order_date; ?></td>
                     <td><?php echo $list->customer_fname.' '.$list->customer_lname; ?></td>
                     <td><?php echo $list->order_total_amount; ?></td>
+                    <td><?php echo $list->order_timeslot_date.'<br>'.$list->order_timeslot_time; ?></td>
                     <td class="text-center">
                       <?php if($list->payment_status == 2){
                         echo '<span class="text-danger">Canceled</span>';

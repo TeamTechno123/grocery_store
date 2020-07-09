@@ -428,7 +428,8 @@ class Cart extends CI_Controller{
     $order_data['order_cust_pin'] = $this->input->post('customer_pin');
     $order_data['order_cust_mob'] = $this->input->post('customer_mobile');
     $order_data['order_cust_email'] = $this->input->post('customer_email');
-    $order_data['order_timeslot'] = $this->input->post('order_timeslot');
+    $order_data['order_timeslot_time'] = $this->input->post('order_timeslot_time');
+    $order_data['order_timeslot_date'] = $this->input->post('order_timeslot_date');
 
     $order_data['order_no'] = $this->User_Model->get_count_no('order_no', 'order_tbl');
     $order_data['order_date'] = date('d-m-Y');
